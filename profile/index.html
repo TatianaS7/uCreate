@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+
+    <!-- Global CSS (CSS rules you want applied to all pages) -->
+    <link rel="stylesheet" href="../global.css">
+
+    <!-- Page-specific CSS -->
+    <link rel="stylesheet" href="./profile.css">
+
+    <title>Profile | YouCreate</title>
+
+    <!-- Run BEFORE page is finished loading (before window.onload): -->
+    <script src="../auth.js"></script>
+    <script>
+        if (isLoggedIn() === false) window.location.replace("/");
+    </script>
+</head>
+
+
+<body>
+
+    <div class="navbar">
+    
+        <div class="navbar-logo">
+            <a href="../index.html"> <img src="../images/#" alt="YouCreate"></a>
+
+        </div>
+
+        <div class="page-links">
+            <ul>
+                <li><a href="../posts/index.html">Posts</a></li>
+                <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
+            </ul>
+        </div>
+    </div>
+
+<hr>
+
+
+<main>
+
+<div class="userInfo">
+    <div class="img-name">
+        <img src="../images/profile.png" alt="profile image" id="profile-img">
+
+        <div id="userDataContainer"></div>
+    </div>
+
+    <div class="about">
+        <p class="aboutMe">About Me</p>
+        <div id="bioContainer">
+            <div class="bio-display" id="bioDisplay"></div>
+            <div class="bio-edit" id="bioEdit">
+                <textarea id="biotext" cols="30" rows="10" placeholder="Edit your bio here"></textarea><br>
+                <button id="saveBio" class="btn btn-outline-dark">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><hr><br>
+
+<div class="posts">
+    
+
+    <div class="new">
+        <h4>Create New Post</h4><br>
+        <select id="postTypeDropdown" onchange="postType()">
+            <option value="Text">Text</option>
+            <option value="Audio">Audio</option>
+            <option value="Poll">Poll</option>
+            <option value="Video">Video</option>
+            <option value="Event">Event</option>
+        </select>
+<br>                
+        <form id="userPost" style="display: block;">
+            <br><label for="postTitle">Title:</label><br>
+            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
+
+            <label for="userPostArea">Content:</label>
+            <textarea name="userPostArea" id="userPostArea" cols="30" rows="8" class="userPostArea"></textarea><br><br>
+            
+            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+        </form>
+
+        <form id="audioPost" style="display: none;">
+            <br><label for="postTitle">Title:</label><br>
+            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
+
+            <label for="audioUpload">Upload Audio:</label><br><br>
+            <input type="file" accept="audio/*" name="audioUpload" id="audioUpload" required><br><br>
+
+            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+        </form>
+
+
+        <form id="pollPost" style="display: none;">
+            <br><label for="pollQuestion">Poll Question:</label><br>
+                <input type="text" name="pollQuestion" id="pollQuestion" required class="postInput"><br><br>
+
+                <label for="pollOptions">Poll Options:</label>
+                <div id="pollOptions">
+                    <div>
+                        <input type="text" name="option1" required class="pollInput">
+                    </div>
+                </div><br>
+
+                <button type="button" onclick="addOption()">Add Option</button><br><br>
+                <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+            </form>
+
+        <form id="videoPost" style="display: none;">
+            <br><label for="postTitle">Title:</label><br>
+            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
+
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" cols="30" rows="3" class="userPostArea"></textarea><br><br>
+
+            <label for="videoUpload">Upload Video:</label><br><br>
+            <input type="file" accept="video/*" name="videoUpload" id="videoUpload" required><br><br>
+        
+            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+        </form>
+<br>
+        <form id="eventPost" enctype="multipart/form-data" style="display: none;">
+            <label for="eventName">Event Name:</label><br>
+            <input type="text" name="eventName" id="eventName" required class="postInput"><br><br>
+
+            <label for="eventDate">Date:</label><br>
+            <input type="date" name="eventDate" id="eventDate" required class="postInput"><br><br>
+
+            <label for="eventLocation">Location:</label><br>
+            <input type="text" name="eventLocation" id="eventLocation" required class="postInput"><br><br>
+
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" cols="30" rows="3" class="userPostArea"></textarea><br><br>
+
+            <label for="eventImage">Upload Media (Optional):</label><br><br>
+            <input type="file" accept="image/*, video/*" name="eventImage" id="eventImage"><br><br>
+
+            <!-- Add any other input fields for other event details (e.g., description, organizer, etc.) -->
+
+            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+        </form>
+
+    </div>
+   <div class="mine">
+        <h4 class="header">My Posts</h4>
+        <div id="profileContainer"></div>
+    </div> 
+</div>
+
+    </main>
+
+    <!-- Page-specific code -->
+    <script src="./profile.js"></script>
+</body>
+
+</html>
