@@ -16,7 +16,16 @@
 :root {
     font-size: 1rem;
 }
-
+.nav-icons {
+    height: 25px;
+}
+.home {
+    height: 32px;
+}
+#settings, #openModalButton {
+    border-width: 0px;
+    background: none;
+}
 .navbar {
     display: flex;
     flex-wrap: wrap;

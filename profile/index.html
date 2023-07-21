@@ -40,7 +40,9 @@
 
         <div class="page-links">
             <ul>
-                <li><a href="../posts/index.html">Posts</a></li>
+                <li><a href="../posts/index.html"><img src="../images/home.png" class="home"></a></li>
+                <li><a href="../saves/index.html"><img src="../images/saves.png" class="nav-icons"></a></li>
+                <li><button id="settings"><img src="../images/settings.png" class="nav-icons"></button></li>
                 <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
             </ul>
         </div>
@@ -96,18 +98,24 @@
         </form>
 
         <form id="audioPost" style="display: none;">
+            <br><label for="audioUpload">Upload Audio:</label><br><br>
+            <input type="file" accept="audio/*" name="audioUpload" id="audioUpload" required><br><br>
+<hr>
             <br><label for="postTitle">Title:</label><br>
             <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
-
-            <label for="audioUpload">Upload Audio:</label><br><br>
-            <input type="file" accept="audio/*" name="audioUpload" id="audioUpload" required><br><br>
+            
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" cols="30" rows="3" class="userPostArea"></textarea><br><br>
 
             <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
         </form>
 
 
         <form id="pollPost" style="display: none;">
-            <br><label for="pollQuestion">Poll Question:</label><br>
+            <br><label for="pollMedia">Upload Media (Optional):</label><br><br>
+            <input type="file" accept="image/*, video/*" name="pollMedia" id="pollMedia"><br><br>
+<hr><br>
+            <label for="pollQuestion">Poll Question:</label><br>
                 <input type="text" name="pollQuestion" id="pollQuestion" required class="postInput"><br><br>
 
                 <label for="pollOptions">Poll Options:</label>
@@ -122,19 +130,22 @@
             </form>
 
         <form id="videoPost" style="display: none;">
+            <br><label for="videoUpload">Upload Video:</label><br><br>
+            <input type="file" accept="video/*" name="videoUpload" id="videoUpload" required><br><br>
+<hr>
             <br><label for="postTitle">Title:</label><br>
             <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
 
             <label for="description">Description:</label>
             <textarea name="description" id="description" cols="30" rows="3" class="userPostArea"></textarea><br><br>
-
-            <label for="videoUpload">Upload Video:</label><br><br>
-            <input type="file" accept="video/*" name="videoUpload" id="videoUpload" required><br><br>
         
             <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
         </form>
 <br>
         <form id="eventPost" enctype="multipart/form-data" style="display: none;">
+            <label for="eventMedia">Upload Media (Optional):</label><br><br>
+            <input type="file" accept="image/*, video/*" name="eventMedia" id="eventMedia"><br><br>
+<hr><br>
             <label for="eventName">Event Name:</label><br>
             <input type="text" name="eventName" id="eventName" required class="postInput"><br><br>
 
@@ -146,10 +157,6 @@
 
             <label for="description">Description:</label>
             <textarea name="description" id="description" cols="30" rows="3" class="userPostArea"></textarea><br><br>
-
-            <label for="eventImage">Upload Media (Optional):</label><br><br>
-            <input type="file" accept="image/*, video/*" name="eventImage" id="eventImage"><br><br>
-
             <!-- Add any other input fields for other event details (e.g., description, organizer, etc.) -->
 
             <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>

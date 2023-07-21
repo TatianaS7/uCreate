@@ -1,4 +1,4 @@
-<!-- POSTS page -->
+<!-- SAVES page -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,9 +18,9 @@
     <link rel="stylesheet" href="../global.css">
 
     <!-- Page-specific CSS -->
-    <link rel="stylesheet" href="./posts.css">
+    <link rel="stylesheet" href="./saves.css">
 
-    <title>Posts | CraftsHQ</title>
+    <title>Saves | YouCreate</title>
 
     <!-- Run BEFORE page is finished loading (before window.onload): -->
     <script src="../auth.js"></script>
@@ -34,24 +34,11 @@
 <div class="navbar">
     <div class="navbar-logo">
         <a href="index.html"> <img src="../images/#" alt="YouCreate"></a>
-        <a href="explore.html" id="explore">Explore</a>
     </div>
 
     <div class="page-links">
         <ul>
-            <li><button id="openModalButton"><img src="../images/search.png" class="nav-icons"</button></li>
-                <div id="searchModal" class="modal">
-                    <div class="modal-content">
-                    <!-- Add your search form or search content here -->
-                    <span class="close">&times;</span>
-                    <form id="searchForm">
-                        <input type="text" name="searchQuery" placeholder="NYFW 2023" id="searchQuery">
-                        <button type="submit">Search</button>
-                    </form>
-                    <br><h3>Recent Searches</h3>
-                    </div>
-                </div>
-              
+            <li><a href="../posts/index.html"><img src="../images/home.png" class="home"></a></li>
             <li><a href="../profile/index.html" ><img src="../images/profile.png" id="profile"></a></li>
             <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
         </ul>
@@ -62,19 +49,19 @@
 <div class="content">
     
     <header>
-        <h1>POSTS</h1>
+        <h1>MY SAVES</h1>
     </header>
 
+
     <main>
-      <div id="postContainer"></div>
+      <div id="savesContainer"></div>
 
     </main>
 
 </div>
-    <footer></footer>
 
     <!-- Page-specific code -->
-    <script src="./posts.js"></script>
+    <script src="./saves.js"></script>
 </body>
 
 </html>
