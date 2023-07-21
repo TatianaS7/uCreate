@@ -209,4 +209,7 @@ main {
     padding: 2px;
     width: max-content;
 }
-
+#openTypeButton {
+    border-radius: 20px;
+    height: 25px;
+}

@@ -22,7 +22,7 @@
 .home {
     height: 32px;
 }
-#settings, #openModalButton {
+#settings, #openModalButton, #searchButton {
     border-width: 0px;
     background: none;
 }
@@ -70,5 +70,5 @@ text-decoration: none;
 
  hr {
      margin-bottom: 0;
-     color: gainsboro;
+     color: blue;
  }

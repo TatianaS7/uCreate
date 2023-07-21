@@ -1,0 +1,142 @@
+/* Explore Page CSS */
+body {
+    background: whitesmoke;
+    color: black;
+}
+    
+/*NAVIGATION PAGE*/
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+     padding: 10px 50px 10px 50px;
+     margin-top: 10px;
+ }
+ 
+ .navbar-logo img{
+     max-height: 130px;
+ }
+
+ .page-links li {
+     list-style: none;
+     display: inline;
+     margin: 15px;
+     font-weight: 500;
+     text-transform: uppercase;
+ }
+ @media screen and (max-width: 600px) {
+ 
+ }
+
+ .page-links a {
+     text-decoration: none;
+     color: black;
+ }
+
+ .page-links a:hover, .page-links .current{
+     text-decoration: underline;
+     text-decoration-color: black;
+     text-decoration-thickness: 2px;
+ }
+
+#profile {
+    max-height: 30px;
+}
+
+ hr {
+     margin-bottom: 0;
+     color: gainsboro;
+ }
+ /* END OF NAVIGATION */
+
+ .content {
+    margin: 60px;
+ }
+
+ h1 {
+    margin-bottom: 40px;
+    font-weight: lighter;
+ }
+
+ #postContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+ #cards {
+    margin: 30px;
+    max-width: 15in;
+    height: 250px; 
+    overflow: auto;
+}
+
+.like-button {
+    border-style: none;
+    background: none;
+    opacity: 0.2;
+}
+
+.liked {
+    opacity: 1.0;
+}
+
+.mousedOver {
+    background-color: black;
+}
+
+.forYouContent, .trendingContent, .eventsContent {
+    display: flex;
+    justify-content: space-evenly;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.card-img-overlay {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    color: white;
+}
+
+#basquiat {
+    box-shadow: 0 4px 8px rgba(34, 29, 29, 0.1);
+    border-style:solid;
+    border-width: 7px;
+    border-color: rgb(175, 171, 171);
+    margin: 30px;
+    max-width: 50%;
+    height: fit-content; 
+    overflow: hidden;
+}
+
+#photoshop {
+    box-shadow: 0 4px 8px rgba(34, 29, 29, 0.1);
+    border-style:solid;
+    border-width: 7px;
+    border-color: rgb(175, 171, 171);
+    margin: 30px;
+    overflow: hidden;
+    width: 30%;
+}
+
+.card-img {
+    width: 100%; /* Set the image width to 100% to fill the width of the card */
+    height: 100%; /* Set the image height to 100% to fill the height of the card */
+    object-fit: cover; /* Resize the image to cover the entire container while maintaining aspect ratio */
+  }
+
+  #location {
+    box-shadow: 0 4px 8px rgba(34, 29, 29, 0.1);
+    border-style:solid;
+    border-width: 7px;
+    border-color: rgb(175, 171, 171);
+    margin: 30px;
+    width: 50%;
+    height: 3in; 
+    overflow: hidden;
+    text-align: center;
+  }
+
+#locationText {
+    padding-top: 100px;
+  }

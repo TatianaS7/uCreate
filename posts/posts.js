@@ -160,3 +160,4 @@ function closeModal() {
 // Event listeners
 openModalButton.addEventListener('click', openModal);
 closeModalButton.addEventListener('click', closeModal);
+
