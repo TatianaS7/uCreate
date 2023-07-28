@@ -33,31 +33,100 @@
 
 <div class="navbar">
     <div class="navbar-logo">
-        <a href="index.html"> <img src="../images/#" alt="YouCreate"></a>
-        <a href="../explore/index.html" id="explore">Explore</a>
+        <a href="../index.html"> <img src="../images/UCreate.PNG" alt="YouCreate"></a>
+        <a href="../explore/index.html" id="explore"><b>Explore</b></a>
     </div>
 
     <div class="page-links">
-        <ul>
-            <li><button id="openModalButton"><img src="../images/search.png" class="nav-icons"</button></li>
-                <div id="searchModal" class="modal">
-                    <div class="modal-content">
-                    <!-- Add your search form or search content here -->
-                    <span class="close">&times;</span>
-                    <form id="searchForm">
-                        <input type="text" name="searchQuery" placeholder="NYFW 2023" id="searchQuery">
-                        <button type="submit" id="searchButton"><img src="../images/search.png" class="nav-icons"></button>
-                    </form>
-                    <br><h3>Recent Searches</h3>
-                    </div>
-                </div>
-              
+        <ul>              
             <li><a href="../profile/index.html" ><img src="../images/profile.png" id="profile"></a></li>
             <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
         </ul>
     </div>
 
 </div><hr>
+
+<div id="post-controls">
+    <button type="button" id="openModalButton">+</button>
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+        <span class="close">&times;</span>
+            <h4>Create New Post</h4><br>
+            <select id="postTypeDropdown" onchange="postType()">
+                <option value="Text">Text</option>
+                <option value="Poll">Poll</option>
+                <option value="Media">Media</option>
+                <option value="Event">Event</option>
+            </select>   
+            
+<!-- TEXT POST-->
+        <form id="userPost" style="display: block;">
+            <br><label for="postTitle">Title:</label><br>
+            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
+
+            <label for="userPostArea">Content:</label><br>
+            <textarea name="userPostArea" id="userPostArea" cols="60" rows="8" class="userPostArea"></textarea><br><br>
+            
+            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+        </form>
+<!-- POLL POST-->
+        <br><form id="pollPost" style="display: none;">
+            <label for="pollMedia">Upload Media (Optional):</label><br><br>
+            <input type="file" accept="image/*, media/*" name="pollMedia" id="pollMedia"><br><br>
+            <hr><br>
+            <label for="pollQuestion">Poll Question:</label><br>
+                <input type="text" name="pollQuestion" id="pollQuestion" required class="postInput"><br><br>
+
+                <label for="pollOptions">Poll Options:</label>
+                <div id="pollOptions">
+                    <div>
+                        <input type="text" name="option1" required class="pollInput">
+                    </div>
+                </div><br>
+
+                <button type="button" onclick="addOption()">Add Option</button><br><br>
+                <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+            </form>
+<!-- MEDIA POST-->
+        <form id="mediaPost" enctype="multipart/form-data" style="display: none;">
+            <label for="mediaUpload">Upload Media:</label><br><br>
+            <input type="file" accept="image/*, video/*, audio*/" name="mediaUpload" id="mediaUpload" required><br><br>
+<hr>
+            <br><label for="postTitle">Title:</label><br>
+            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
+
+            <label for="description">Description:</label><br>
+            <textarea name="description" id="description" cols="60" rows="3" class="userPostArea"></textarea><br><br>
+        
+            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+        </form>
+
+<!-- EVENT POST-->
+            <form id="eventPost" enctype="multipart/form-data" style="display: none;">
+                <label for="eventMedia">Upload Media (Optional):</label><br><br>
+                <input type="file" accept="image/*, media/*" name="eventMedia" id="eventMedia"><br><br>
+                <hr><br>
+                <div class="event-content">
+                <div class="event-details">
+                    <label for="eventName">Event Name:</label><br>
+                    <input type="text" name="eventName" id="eventName" required class="postInput"><br><br>
+
+                    <label for="eventDate">Date:</label><br>
+                    <input type="date" name="eventDate" id="eventDate" required class="postInput"><br><br>
+
+                    <label for="eventLocation">Location:</label><br>
+                    <input type="text" name="eventLocation" id="eventLocation" required class="postInput"><br><br>
+                    </div>
+                    <div class="event-description">
+                        <label for="description">Description:</label><br>
+                        <textarea name="description" id="description" cols="80" rows="8" class="userPostArea"></textarea><br><br>
+                    </div>
+                </div>
+                <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="content">
     

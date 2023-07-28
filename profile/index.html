@@ -34,15 +34,34 @@
     <div class="navbar">
     
         <div class="navbar-logo">
-            <a href="../index.html"> <img src="../images/#" alt="YouCreate"></a>
+            <a href="../index.html"> <img src="../images/UCreate.PNG" alt="YouCreate"></a>
 
         </div>
 
         <div class="page-links">
             <ul>
-                <li><a href="../posts/index.html"><img src="../images/home.png" class="home"></a></li>
                 <li><a href="../saves/index.html"><img src="../images/saves.png" class="nav-icons"></a></li>
-                <li><button id="settings"><img src="../images/settings.png" class="nav-icons"></button></li>
+                <li><button type="button" id="openSettingsModalButton"><img src="../images/settings.png" class="nav-icons"></button></li>
+                <div id="settingsModal" class="modal">
+                    <div class="modal-content">
+                    <span class="close">&times;</span>
+                        <h3>User Settings</h3><hr>
+
+                        <h5>Personal Information</h5>
+                            <h6>Full Name:</h6>
+                            <h6>Email Address:</h6>
+                            <h6>Password:</h6>
+                            <h6>Location:</h6>
+                            <h6>Bio:</h6>
+                        <h5>Preferences</h5>
+                            <h6>Choose your skills:</h6>
+                        <h6><input type="checkbox" id="email-notis" name="email-notis" value="true">
+                        <label for="email-notis">I'd like to receive email notifications.</label></h6>
+
+                        <h5>Privacy</h5>
+                    </div>
+                </div>
+            
                 <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
             </ul>
         </div>
@@ -58,7 +77,8 @@
         <img src="../images/profile.png" alt="profile image" id="profile-img">
 
         <div id="userDataContainer"></div>
-    </div>
+    
+</div>
 
     <div class="about">
         <p class="aboutMe">About Me</p>
@@ -69,6 +89,23 @@
                 <button id="saveBio" class="btn btn-outline-dark">Save</button>
             </div>
         </div>
+        <div class="skills">
+        <br><p><b>Skills</b></p>
+        <img src="../images/skill-icons/procreate-icon.png">
+        <img src="../images/skill-icons/photoshop-icon.png">
+        <img src="../images/skill-icons/blender-icon.png">
+        <img src="../images/skill-icons/premiere-icon.jpg" style="height: 45px; width: 45px;">
+        
+        <button type="button" id="openSkillsModalButton">+</button>
+        <div id="skillsModal" class="modal">
+            <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>My Skills</h3>
+            </div>
+        </div>
+   
+    </div>
+
     </div>
 </div>
 
@@ -76,100 +113,13 @@
 
 <div class="posts">
     
-
-    <div class="new">
-        <h4>Create New Post</h4><br>
-        <select id="postTypeDropdown" onchange="postType()">
-            <option value="Text">Text</option>
-            <option value="Audio">Audio</option>
-            <option value="Poll">Poll</option>
-            <option value="Video">Video</option>
-            <option value="Event">Event</option>
-        </select>
-<br>
-        <form id="userPost" style="display: block;">
-            <br><label for="postTitle">Title:</label><br>
-            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
-
-            <label for="userPostArea">Content:</label>
-            <textarea name="userPostArea" id="userPostArea" cols="30" rows="8" class="userPostArea"></textarea><br><br>
-            
-            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
-        </form>
-
-        <form id="audioPost" style="display: none;">
-            <br><label for="audioUpload">Upload Audio:</label><br><br>
-            <input type="file" accept="audio/*" name="audioUpload" id="audioUpload" required><br><br>
-<hr>
-            <br><label for="postTitle">Title:</label><br>
-            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
-            
-            <label for="description">Description:</label>
-            <textarea name="description" id="description" cols="30" rows="3" class="userPostArea"></textarea><br><br>
-
-            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
-        </form>
-
-
-        <form id="pollPost" style="display: none;">
-            <br><label for="pollMedia">Upload Media (Optional):</label><br><br>
-            <input type="file" accept="image/*, video/*" name="pollMedia" id="pollMedia"><br><br>
-<hr><br>
-            <label for="pollQuestion">Poll Question:</label><br>
-                <input type="text" name="pollQuestion" id="pollQuestion" required class="postInput"><br><br>
-
-                <label for="pollOptions">Poll Options:</label>
-                <div id="pollOptions">
-                    <div>
-                        <input type="text" name="option1" required class="pollInput">
-                    </div>
-                </div><br>
-
-                <button type="button" onclick="addOption()">Add Option</button><br><br>
-                <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
-            </form>
-
-        <form id="videoPost" style="display: none;">
-            <br><label for="videoUpload">Upload Video:</label><br><br>
-            <input type="file" accept="video/*" name="videoUpload" id="videoUpload" required><br><br>
-<hr>
-            <br><label for="postTitle">Title:</label><br>
-            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
-
-            <label for="description">Description:</label>
-            <textarea name="description" id="description" cols="30" rows="3" class="userPostArea"></textarea><br><br>
-        
-            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
-        </form>
-<br>
-        <form id="eventPost" enctype="multipart/form-data" style="display: none;">
-            <label for="eventMedia">Upload Media (Optional):</label><br><br>
-            <input type="file" accept="image/*, video/*" name="eventMedia" id="eventMedia"><br><br>
-<hr><br>
-            <label for="eventName">Event Name:</label><br>
-            <input type="text" name="eventName" id="eventName" required class="postInput"><br><br>
-
-            <label for="eventDate">Date:</label><br>
-            <input type="date" name="eventDate" id="eventDate" required class="postInput"><br><br>
-
-            <label for="eventLocation">Location:</label><br>
-            <input type="text" name="eventLocation" id="eventLocation" required class="postInput"><br><br>
-
-            <label for="description">Description:</label>
-            <textarea name="description" id="description" cols="30" rows="3" class="userPostArea"></textarea><br><br>
-            <!-- Add any other input fields for other event details (e.g., description, organizer, etc.) -->
-
-            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
-        </form>
-
-    </div>
    <div class="mine">
         <h4 class="header">My Posts</h4>
         <div id="profileContainer"></div>
     </div> 
 </div>
 
-    </main>
+</main>
 
     <!-- Page-specific code -->
     <script src="./profile.js"></script>

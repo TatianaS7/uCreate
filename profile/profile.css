@@ -213,3 +213,18 @@ main {
     border-radius: 20px;
     height: 25px;
 }
+
+.skills img {
+width: 40px;
+}
+
+#openSettingsModalButton, #openSkillsModalButton {
+    border-style: none;
+    background-color: whitesmoke;
+}
+
+#openSkillsModalButton {
+    border-left: rgba(137, 137, 137, 0.336);
+    border-left-style: solid;
+    border-left-width: 2px;
+}

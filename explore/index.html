@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<header>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,18 +27,30 @@
     <script>
         if (isLoggedIn() === false) window.location.replace("/");
     </script>
-</head>
+</header>
 
 <body>
 
 <div class="navbar">
     <div class="navbar-logo">
-        <a href="index.html"> <img src="../images/#" alt="YouCreate"></a>
+        <a href="../index.html"> <img src="../images/UCreate.PNG" alt="YouCreate"></a>
     </div>
 
     <div class="page-links">
         <ul>
-            <li><a href="../posts/index.html"><img src="../images/home.png" class="home"></a></li>
+            <li><button id="openModalButton"><img src="../images/search.png" class="nav-icons"</button></li>
+            <div id="searchModal" class="modal">
+                <div class="modal-content">
+                <!-- Add your search form or search content here -->
+                <span class="close">&times;</span>
+                <form id="searchForm">
+                    <input type="text" name="searchQuery" placeholder="NYFW 2023" id="searchQuery">
+                    <button type="submit" id="searchButton"><img src="../images/search.png" class="nav-icons"></button>
+                </form>
+                <br><h3>Recent Searches</h3>
+                </div>
+            </div>
+
             <li><a href="../profile/index.html" ><img src="../images/profile.png" id="profile"></a></li>
             <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
         </ul>
@@ -48,9 +60,7 @@
 
 <div class="content">
     
-    <header>
         <h1>EXPLORE</h1><hr>
-    </header>
 
     <br><h3>For You</h3>
     <div class="forYouContent">
@@ -112,7 +122,7 @@
 
     </div><hr><br>
 
-    <h3>Events</h3>
+    <h3>Locations</h3>
     <div class="eventsContent">
         <div class="card bg-dark text-white" id="location">
             <img class="card-img" src="../images/midtown.jpg" alt="Card image">
@@ -139,7 +149,7 @@
 </div>
 
     <!-- Page-specific code -->
-    <script src="./saves.js"></script>
+    <script src="./explore.js"></script>
 </body>
 
 </html>

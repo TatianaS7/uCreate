@@ -4,6 +4,8 @@
 
 const logoutButton = document.querySelector("#logout");
 const postContainer = document.querySelector('#postContainer');
+const userPost = document.querySelector("#userPost");
+
 logoutButton.onclick = logout;
 
 function convertDateTime(apiDateTime) {
@@ -142,22 +144,98 @@ function mouseOutEffect(postId) {
 }
 
 
+//New Post
+
 // Get references to the button and modal
 const openModalButton = document.getElementById('openModalButton');
-const searchModal = document.getElementById('searchModal');
+const postModal = document.getElementById('postModal');
 const closeModalButton = document.getElementsByClassName('close')[0];
 
 // Function to open the modal
 function openModal() {
-  searchModal.style.display = 'block';
+  postModal.style.display = 'block';
 }
 
 // Function to close the modal
 function closeModal() {
-  searchModal.style.display = 'none';
+  postModal.style.display = 'none';
 }
 
 // Event listeners
 openModalButton.addEventListener('click', openModal);
 closeModalButton.addEventListener('click', closeModal);
 
+// SELECT POST TYPE
+const postOption = document.querySelector("#postTypeDropdown");
+const pollPost = document.querySelector("#pollPost");
+const mediaPost = document.querySelector("#mediaPost");
+const eventPost = document.querySelector("#eventPost");
+
+function postType() {
+  const selectedType = postOption.value;
+
+  // Hide all form sections
+  pollPost.style.display = "none";
+  mediaPost.style.display = "none";
+  eventPost.style.display = "none";
+
+  // Show the selected form section based on the dropdown value
+  if (selectedType === "Text") {
+    userPost.style.display = "block";
+  } else if (selectedType === "Poll") {
+    pollPost.style.display = "block";
+    userPost.style.display = "none";
+  } else if (selectedType === "Media") {
+    mediaPost.style.display = "block";
+    userPost.style.display = "none";
+  } else if (selectedType === "Event") {
+    eventPost.style.display = "block";
+    userPost.style.display = "none";
+  }
+}
+//Add Poll Option
+function addOption() {
+  var pollOptionsDiv = document.getElementById("pollOptions");
+  var optionNumber = pollOptionsDiv.getElementsByTagName("div").length + 1;
+
+  var newOptionDiv = document.createElement("div");
+  var newOptionInput = document.createElement("input");
+  newOptionInput.type = "text";
+  newOptionInput.name = "option" + optionNumber;
+  newOptionInput.required = true;
+  newOptionInput.classList = "pollInput";
+
+  newOptionDiv.appendChild(newOptionInput);
+  pollOptionsDiv.appendChild(newOptionDiv);
+}
+
+userPost.onsubmit = formSubmit;
+
+//Form Submit
+function formSubmit(event) {
+    event.preventDefault();
+    profileContainer.replaceChildren();
+    sendData(userPost.userPostArea.value);
+  }
+  
+  //Send Data
+  function sendData(postContent) {
+    const loginData = getLoginData();
+    console.log(loginData);
+    const options = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${loginData.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: postContent }),
+    };
+  
+    fetch(apiBaseURL + "/api/posts", options)
+      .then((response) => response.json())
+      .then((data) => {
+        profileFetch();
+        console.log(data);
+      });
+  }
+  

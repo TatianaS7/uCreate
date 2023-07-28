@@ -2,13 +2,11 @@
 
 const logoutButton = document.querySelector("#logout");
 const profileContainer = document.querySelector("#profileContainer");
-const userPost = document.querySelector("#userPost");
 const dataContainer = document.querySelector("#userDataContainer");
 const bioDisplay = document.querySelector("#bioDisplay");
 const saveBioButton = document.querySelector("#saveBio");
 const bioTextarea = document.querySelector("#biotext");
 
-userPost.onsubmit = formSubmit;
 logoutButton.onclick = logout;
 saveBioButton.onclick = saveBio;
 
@@ -120,33 +118,6 @@ function saveBio() {
   updateBio();
 }
 
-//Form Submit
-function formSubmit(event) {
-  event.preventDefault();
-  profileContainer.replaceChildren();
-  sendData(userPost.userPostArea.value);
-}
-
-//Send Data
-function sendData(postContent) {
-  const loginData = getLoginData();
-  console.log(loginData);
-  const options = {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${loginData.token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ text: postContent }),
-  };
-
-  fetch(apiBaseURL + "/api/posts", options)
-    .then((response) => response.json())
-    .then((data) => {
-      profileFetch();
-      console.log(data);
-    });
-}
 
 window.onload = main;
 
@@ -173,51 +144,43 @@ function deletePost(postId) {
     });
 }
 
-// SELECT POST TYPE
-const postOption = document.querySelector("#postTypeDropdown");
-const audioPost = document.querySelector("#audioPost");
-const pollPost = document.querySelector("#pollPost");
-const videoPost = document.querySelector("#videoPost");
-const eventPost = document.querySelector("#eventPost");
+// SETTINGS modal
+const openSettingsModalButton = document.getElementById('openSettingsModalButton');
+const settingsModal = document.getElementById('settingsModal');
+const closeModalButton = document.getElementsByClassName('close')[0];
 
-function postType() {
-  const selectedType = postOption.value;
-
-  // Hide all form sections
-  audioPost.style.display = "none";
-  pollPost.style.display = "none";
-  videoPost.style.display = "none";
-  eventPost.style.display = "none";
-
-  // Show the selected form section based on the dropdown value
-  if (selectedType === "Audio") {
-    audioPost.style.display = "block";
-    userPost.style.display = "none";
-  } else if (selectedType === "Poll") {
-    pollPost.style.display = "block";
-    userPost.style.display = "none";
-  } else if (selectedType === "Video") {
-    videoPost.style.display = "block";
-    userPost.style.display = "none";
-  } else if (selectedType === "Event") {
-    eventPost.style.display = "block";
-    userPost.style.display = "none";
-  } else if (selectedType === "Text") {
-    userPost.style.display = "block";
-  }
+// Function to open the modal
+function openSettingsModal() {
+  settingsModal.style.display = 'block';
 }
-//Add Poll Option
-function addOption() {
-  var pollOptionsDiv = document.getElementById("pollOptions");
-  var optionNumber = pollOptionsDiv.getElementsByTagName("div").length + 1;
 
-  var newOptionDiv = document.createElement("div");
-  var newOptionInput = document.createElement("input");
-  newOptionInput.type = "text";
-  newOptionInput.name = "option" + optionNumber;
-  newOptionInput.required = true;
-  newOptionInput.classList = "pollInput";
-
-  newOptionDiv.appendChild(newOptionInput);
-  pollOptionsDiv.appendChild(newOptionDiv);
+// Function to close the modal
+function closeModal() {
+  settingsModal.style.display = 'none';
+  skillsModal.style.display = 'none';
 }
+
+// Event listeners
+openSettingsModalButton.addEventListener('click', openSettingsModal);
+closeModalButton.addEventListener('click', closeModal);
+
+
+
+// SKILLS modal
+const openSkillsModalButton = document.getElementById('openSkillsModalButton');
+const skillsModal = document.getElementById('skillsModal');
+const closeSkillsModalButton = document.getElementsByClassName('close')[0];
+
+// Function to open the modal
+function openSkillsModal() {
+  skillsModal.style.display = 'block';
+}
+
+// Function to close the modal
+function closeSkillsModal() {
+  skillsModal.style.display = 'none';
+}
+
+// Event listeners
+openSkillsModalButton.addEventListener('click', openSkillsModal);
+closeSkillsModalButton.addEventListener('click', closeSkillsModal);

@@ -116,7 +116,7 @@ body {
     border-color: rgb(175, 171, 171);
     margin: 30px;
     overflow: hidden;
-    width: 30%;
+    width: 38%;
 }
 
 .card-img {
@@ -139,4 +139,19 @@ body {
 
 #locationText {
     padding-top: 100px;
+  }
+
+  /* Modal Styles */
+  #searchQuery {
+    width: 40%;
+    border-radius: 10px;
+    border-width: 1px;
+    height: 40px;
+    padding: 10px;
+    background: rgb(244, 243, 240);
+    margin-left: 20px;
+  }
+  
+  #locationText h3{
+    margin-left: 20px;
   }
