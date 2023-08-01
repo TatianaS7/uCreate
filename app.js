@@ -1,6 +1,9 @@
 // app.js
 
 const pool = require('./dbConfig');
+const dotenv = require('dotenv');
+dotenv.config(); // Load environment variables from .env file
+
 
 // Require necessary modules
 const express = require('express');
@@ -54,7 +57,7 @@ app.get('/api/posts', (req, res) => {
     const { postType } = req.query;
 
     const sql = 'SELECT * FROM posts WHERE postType = poll';
-    db.query(sql, [postType], (err, results) => {
+    pool.query(sql, [postType], (err, results) => {
         if (err) {
             console.error('Error fetching posts:', err);
             res.status(500).json({error: 'Internal Server Error' });
@@ -68,7 +71,7 @@ app.get('/api/posts', (req, res) => {
 //Get All Users
     app.get('/api/users', (req, res) => {    
         const sql = 'SELECT * FROM users';
-        db.query(sql, (err, results) => {
+        pool.query(sql, (err, results) => {
             if (err) {
                 console.error('Error fetching users:', err);
                 res.status(500).json({error: 'Internal Server Error' });

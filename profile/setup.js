@@ -1,5 +1,8 @@
 // PROFILE SETUP
 
+const dataContainer = document.querySelector("#settingsUserInfo");
+
+
 // Skills
 const skillIconMap = {
     Procreate: 'procreate-icon.png',
@@ -23,9 +26,14 @@ function skillIconMatch() {
         iconElement.alt = selectedOption; // You can use the skill name as the alt text for accessibility
     
         // Append the icon to the user's profile container (replace 'userProfile' with the actual container ID/class)
-        const userProfile = document.getElementById('userProfile');
-        userProfile.appendChild(iconElement);
+        const skillsContainer = document.getElementById('skillsDisplay');
+        skillsContainer.appendChild(iconElement);
       }
     }
+
+
+function skillInfoDisplay() {
+//GET info from API
+}    
 
 userSkills.addEventListener('change', skillIconMatch);
