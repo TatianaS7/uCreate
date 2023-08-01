@@ -1,21 +1,16 @@
 // app.js
 
+// Require necessary modules
+
 const pool = require('./dbConfig');
 const dotenv = require('dotenv');
 dotenv.config(); // Load environment variables from .env file
-
-
-// Require necessary modules
 const express = require('express');
 const cors = require('cors');
-const pool = require('./dbConfig'); // Import the database connection pool
-
-// Add other requires for modules you need
 
 // Create an instance of Express app
 const app = express();
 
-// ... Further setup and code will go here ...
 app.use(cors());
 app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
