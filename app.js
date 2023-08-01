@@ -1,5 +1,7 @@
 // app.js
 
+const pool = require('./dbConfig');
+
 // Require necessary modules
 const express = require('express');
 const cors = require('cors');
@@ -16,7 +18,38 @@ app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
 
-//Define API endpoint
+//User Authentication Endpoints
+//Register New User
+const bcrypt = require('bcrypt');
+
+app.post('/api/register', async (req, res) => {
+    const { full_name, username, email, password } = req.body;
+    
+    try {
+        const checkExistingUser = 'SELECT * FROM users WHERE username = ? OR email = ?';
+        const existingUser = await pool.query(checkExistingUser, [username, email]);
+        if (existingUser.length > 0) {
+            return res.status(400).json({error: 'Username or email already exists'});
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const insertUser = 'INSERT INTO users (full_name, username, email, password) VALUES (?, ?, ?, ?)';
+        await pool.query(insertUser, [full_name, username, email, hashedPassword]);
+
+        res.status(201).json({message: 'Account created'});
+    } catch (error) {
+        console.error('Error registering user:', error);
+        res.status(500).json({ error: 'Internal Server Error'});
+    }
+});
+//Authenticate User & Generate Access Token
+app.post('/api/login', async (req, res) => {
+    const {username, email, password} = req.body;
+})
+
+
+
+//User Posts Endpoints
 app.get('/api/posts', (req, res) => {
     const { postType } = req.query;
 
@@ -31,6 +64,7 @@ app.get('/api/posts', (req, res) => {
     });
 });
 
+//User Profile Endpoints
 //Get All Users
     app.get('/api/users', (req, res) => {    
         const sql = 'SELECT * FROM users';
@@ -44,20 +78,6 @@ app.get('/api/posts', (req, res) => {
         });
     });
 
-
-
- // For now, let's assume we have some dummy posts data:
- const dummyPosts = [
-    { id: 1, postType: 'text', title: 'Sample Text Post', content: 'This is a text post.' },
-    { id: 2, postType: 'media', title: 'Sample Media Post', mediaType: 'image', mediaFile: 'sample.jpg' },
-    // Add more dummy posts here...
-  ];
-
-  // Filter the posts based on the specified postType
-  const filteredPosts = dummyPosts.filter((post) => post.postType === postType);
-
-  res.json(filteredPosts);
-});
 
 // ... Other endpoints and server setup ...
 
