@@ -40,41 +40,48 @@ app.post('/api/register', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error'});
     }
 });
-//Authenticate User & Generate Access Token
-app.post('/api/login', async (req, res) => {
-    const {username, email, password} = req.body;
-})
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
+  });
+
+  
+// //Authenticate User & Generate Access Token
+// app.post('/api/login', async (req, res) => {
+//     const {username, email, password} = req.body;
+// })
 
 
 
-//User Posts Endpoints
-app.get('/api/posts', (req, res) => {
-    const { postType } = req.query;
+// //User Posts Endpoints
+// app.get('/api/posts', (req, res) => {
+//     const { postType } = req.query;
 
-    const sql = 'SELECT * FROM posts WHERE postType = poll';
-    pool.query(sql, [postType], (err, results) => {
-        if (err) {
-            console.error('Error fetching posts:', err);
-            res.status(500).json({error: 'Internal Server Error' });
-        } else {
-            res.json(results);
-        }
-    });
-});
+//     const sql = 'SELECT * FROM posts WHERE postType = ?';
+//     pool.query(sql, [postType], (err, results) => {
+//         if (err) {
+//             console.error('Error fetching posts:', err);
+//             res.status(500).json({error: 'Internal Server Error' });
+//         } else {
+//             res.json(results);
+//         }
+//     });
+// });
 
-//User Profile Endpoints
-//Get All Users
-    app.get('/api/users', (req, res) => {    
-        const sql = 'SELECT * FROM users';
-        pool.query(sql, (err, results) => {
-            if (err) {
-                console.error('Error fetching users:', err);
-                res.status(500).json({error: 'Internal Server Error' });
-            } else {
-                res.json(results);
-            }
-        });
-    });
+// //User Profile Endpoints
+// //Get All Users
+//     app.get('/api/users', (req, res) => {    
+//         const sql = 'SELECT * FROM users';
+//         pool.query(sql, (err, results) => {
+//             if (err) {
+//                 console.error('Error fetching users:', err);
+//                 res.status(500).json({error: 'Internal Server Error' });
+//             } else {
+//                 res.json(results);
+//             }
+//         });
+//     });
 
 
 // ... Other endpoints and server setup ...

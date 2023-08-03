@@ -211,6 +211,30 @@ function addOption() {
 
 userPost.onsubmit = formSubmit;
 
+//EVENT GEOCODING
+// const address = '1600 Amphitheatre Parkway, Mountain View, CA'; // Replace this with the user-selected address
+// const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace this with your actual API key
+
+// const geocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+
+// fetch(geocodingUrl)
+//   .then(response => response.json())
+//   .then(data => {
+//     if (data.results && data.results.length > 0) {
+//       const location = data.results[0].geometry.location;
+//       const latitude = location.lat;
+//       const longitude = location.lng;
+
+//       // Now you can use the latitude and longitude values as needed.
+//     } else {
+//       console.error('Geocoding failed or returned no results.');
+//     }
+//   })
+//   .catch(error => {
+//     console.error('Error while geocoding:', error);
+//   });
+
+
 //Form Submit
 function formSubmit(event) {
     event.preventDefault();
