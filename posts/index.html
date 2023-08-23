@@ -71,9 +71,14 @@
         </form>
 <!-- POLL POST-->
         <br><form id="pollPost" style="display: none;">
-            <label for="pollMedia">Upload Media (Optional):</label><br><br>
-            <input type="file" accept="image/*, media/*" name="pollMedia" id="pollMedia"><br><br>
+            <div class = "newPostContainer" style="display: flex;">
+
+            <div class="media">
+                <label for="pollMedia">Upload Media (Optional):</label><br><br>
+                <input type="file" accept="image/*, media/*" name="pollMedia" id="pollMedia"><br><br>
+            </div>
             <hr><br>
+            <div class="post-content">
             <label for="pollQuestion">Poll Question:</label><br>
                 <input type="text" name="pollQuestion" id="pollQuestion" required class="postInput"><br><br>
 
@@ -82,22 +87,27 @@
                     <div>
                         <input type="text" name="option1" required class="pollInput">
                     </div>
-                </div><br>
-
+                </div><br><br>
                 <button type="button" onclick="addOption()">Add Option</button><br><br>
+            </div>
+            </div>
                 <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
             </form>
 <!-- MEDIA POST-->
         <form id="mediaPost" enctype="multipart/form-data" style="display: none;">
-            <label for="mediaUpload">Upload Media:</label><br><br>
-            <input type="file" accept="image/*, video/*, audio*/" name="mediaUpload" id="mediaUpload" required><br><br>
-<hr>
-            <br><label for="postTitle">Title:</label><br>
-            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
+            <div class = "newPostContainer" style="display: flex;">
+                <div class="media">
+                    <label for="mediaUpload">Upload Media:</label><br><br>
+                    <input type="file" accept="image/*, video/*, audio*/" name="mediaUpload" id="mediaUpload" required><br><br>
+                </div>
+                <div class="post-content">
+                    <br><label for="postTitle">Title:</label><br>
+                    <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
 
-            <label for="description">Description:</label><br>
-            <textarea name="description" id="description" cols="60" rows="3" class="userPostArea"></textarea><br><br>
-        
+                    <label for="description">Description:</label><br>
+                    <textarea name="description" id="description" cols="60" rows="3" class="userPostArea"></textarea><br><br>
+                </div>
+            </div>
             <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
         </form>
 
@@ -119,7 +129,7 @@
                     </div>
                     <div class="event-description">
                         <label for="description">Description:</label><br>
-                        <textarea name="description" id="description" cols="80" rows="8" class="userPostArea"></textarea><br><br>
+                        <textarea name="description" id="description" cols="60" rows="8" class="userPostArea"></textarea><br><br>
                     </div>
                 </div>
                 <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>

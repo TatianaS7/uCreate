@@ -148,3 +148,16 @@ select {
 .event-details {
     margin-left: 30px;
 }
+
+.newPostContainer {
+    padding-left: 50px;
+    padding-top: 20px;
+}
+
+.media {
+    margin-right: 50px;
+    border-right: 2px;
+    border-right-style: solid;
+    border-right-color: whitesmoke;
+}
+

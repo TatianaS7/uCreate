@@ -228,3 +228,29 @@ width: 40px;
     border-left-style: solid;
     border-left-width: 2px;
 }
+
+.userProfileContainers {
+    background-color: whitesmoke;
+    color: black;
+    font-weight: 300;
+    padding-left: 10px;
+    padding-top: 10px;
+    max-width: fit-content;
+    margin-left: 10px;
+}
+
+.edit-button {
+    display: flex;
+}
+
+.edit-button button {
+    margin-left: 15px;
+    border-style: none;
+    background: none;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.user-info-fields {
+    display: flex;
+}
