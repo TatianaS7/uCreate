@@ -2,8 +2,7 @@
 
 "use strict";
 
-// const apiBaseURL = "https://microbloglite.herokuapp.com";
-const apiBaseURL = "https://microbloglite.onrender.com";
+const apiBaseURL = "http://localhost:3000";
 
 
 // You can use this function to get the login data of the logged-in
@@ -21,7 +20,6 @@ function isLoggedIn () {
     const loginData = getLoginData();
     return Boolean(loginData.token);
 }
-
 
 // This function is already being used in the starter code for the
 // landing page, in order to process a user's login. READ this code,
@@ -43,16 +41,31 @@ function login (loginData) {
     return fetch(apiBaseURL + "/auth/login", options)
         .then(response => response.json())
         .then(loginData => {
-            if(loginData.statusCode === 200) {
+
+            if(loginData.statusCode === 200) { //ERROR, refreshing instead of redirecting
                 window.localStorage.setItem("login-data", JSON.stringify(loginData));
                 window.location.assign("/posts");  // redirect
                 return loginData;
+
             } else {
                 alert("The login information is incorrect.")
             }
         })
+        .catch(error => {
+            console.error("Login error:", error);
+            alert("Error logging in, try again later.")
+        })
 }
 
+// Function to store the access token in local storage
+function storeAccessToken(token) {
+    window.localStorage.setItem("access-token", token);
+}
+
+// Function to store user data in local storage
+function storeUserData(user) {
+    window.localStorage.setItem("user-data", JSON.stringify(user));
+}
 
 // This is the `logout()` function you will use for any logout button
 // which you may include in various pages in your app. Again, READ this

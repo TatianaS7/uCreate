@@ -25,7 +25,7 @@
     <!-- Run BEFORE page is finished loading (before window.onload): -->
     <script src="../auth.js"></script>
     <script>
-        if (isLoggedIn() === false) window.location.replace("/");
+        // if (isLoggedIn() === false) window.location.replace("/");
     </script>
 </header>
 
@@ -47,7 +47,9 @@
                     <input type="text" name="searchQuery" placeholder="NYFW 2023" id="searchQuery">
                     <button type="submit" id="searchButton"><img src="../images/search.png" class="nav-icons"></button>
                 </form>
-                <br><h3>Recent Searches</h3>
+                <br><h3 class="recent-searches">Recent Searches</h3>
+
+                <div id="searchResults"></div>
                 </div>
             </div>
 

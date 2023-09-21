@@ -25,7 +25,6 @@ app.use((err, req, res, next) => {
 
 // Your client ID and client secret from Pocket Developer Portal
 const CLIENT_ID = process.env.CLIENT_ID;
-// const CLIENT_SECRET = secretKey;
 
 // The URL where you will handle the OAuth callback
 const REDIRECT_URI = "http://localhost:3000/api/pocket-callback";
@@ -103,30 +102,33 @@ app.post("/auth/login", async (req, res) => {
     const [user] = await pool.query(getUser, [username, email]);
 
     if (!user || user.length === 0) {
-      return res.status(401).json({ error: "User not found" });
+      return res.status(401).json({ statusCode: 401, error: "User not found" });
     }
 
     const validatePassword = await bcrypt.compare(password, user[0].password);
 
     if (!validatePassword) {
-      return res.status(401).json({ error: "Invalid password" });
+      return res.status(401).json({ statusCode: 401, error: "Invalid password" });
     }
 
-    const accessToken = jwt.sign({ userId: user[0].id }, secretKey, {
+const getUserData = "SELECT idUsers, username, avatar FROM users WHERE username = ?";
+const [userData] = await pool.query(getUserData, [user]);
+
+    const accessToken = jwt.sign({ userId: userData.user }, secretKey, {
       expiresIn: "1h",
     });
-    res
-      .status(200)
-      .json({ message: "Authentication successful!", accessToken });
+
+    res.status(200).json({ statusCode: 200, message: "Authentication successful!", accessToken, user: userData });
+
   } catch (error) {
     console.error("Error authenticating account:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ statusCode: 500, error: "Internal Server Error" });
   }
 });
 
 //Update User Info
-app.put("/api/users/:idUsers/profile", async (req, res) => {
-  const idUsers = req.params.idUsers;
+app.put("/api/users/:username/profile", async (req, res) => {
+  const current_user = req.params.username;
   const { username, newPassword, email, bio, avatar } = req.body;
 
   try {
@@ -137,7 +139,7 @@ app.put("/api/users/:idUsers/profile", async (req, res) => {
     }
 
     const updateProfile =
-      "UPDATE users SET username = ?, password = ?, email = ?, bio = ?, avatar = ? WHERE idUsers = ?";
+      "UPDATE users SET username = ?, password = ?, email = ?, bio = ?, avatar = ? WHERE current_user = ?";
 
     await pool.query(updateProfile, [
       username,
@@ -145,7 +147,7 @@ app.put("/api/users/:idUsers/profile", async (req, res) => {
       email,
       bio,
       avatar,
-      idUsers,
+      current_user,
     ]);
 
     res.status(200).json({ message: "Profile updated!" });
@@ -282,6 +284,20 @@ app.delete("/api/posts/:postId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+//Get All Posts 
+app.get("/api/posts", async (req, res) => {
+  const sql = "SELECT username, title, content, media FROM posts";
+  pool.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching posts:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      res.json(results);
+    }
+  });
+
+})
 
 
 //EVENTS//
@@ -582,11 +598,27 @@ app.get("/api/users", (req, res) => {
   });
 });
 
+//Get Specific User Data
+app.get("/api/users/:idUsers", async (req, res) => {
+  const userId = req.params.idUsers;
+
+  try {
+  const getUserData = "SELECT full_name, username, email, bio, avatar, idUsers FROM users WHERE idUsers = ?";
+  const [userData] = await pool.query(getUserData, [userId]);
+
+  res.status(200).json({ userData });
+
+  } catch (error) {
+      console.error("Error fetching user data:", error);
+      res.status(500).json({ error: "Internal Server Error"});
+  }
+});
+
 
 //SKILLS/TAGS ENDPOINTS
 //Show All Skills
 app.get("/api/skills", (req, res) => {
-  const getSkills = "SELECT skill_name, description FROM skills";
+  const getSkills = "SELECT skill_name, description, image_path FROM skills ORDER BY skill_name ASC";
   pool.query(getSkills, (err, results) => {
     if (err) {
       console.error("Error fetching skills:", err);
@@ -631,7 +663,7 @@ app.get("/api/search/skills", async (req, res) => {
 
   try {
     const skillSql =
-      "SELECT skill_name, description FROM skills WHERE skill_name LIKE ? OR description LIKE ?";
+      "SELECT skill_name, description, image_path FROM skills WHERE skill_name LIKE ? OR description LIKE ?";
     const [skill] = await pool.query(skillSql, [`%${q}%`, `%${q}%`]);
 
     if (skill.length > 0) {

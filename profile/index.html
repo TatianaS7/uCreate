@@ -24,7 +24,7 @@
     <!-- Run BEFORE page is finished loading (before window.onload): -->
     <script src="../auth.js"></script>
     <script>
-        if (isLoggedIn() === false) window.location.replace("/");
+        // if (isLoggedIn() === false) window.location.replace("/"); 
     </script>
 </head>
 
@@ -44,7 +44,7 @@
                 <li><button type="button" id="openSettingsModalButton"><img src="../images/settings.png" class="nav-icons"></button></li>
                 <div id="settingsModal" class="modal">
                     <div class="modal-content">
-                    <span class="close">&times;</span>
+                    <span class="close" id="close-settings">&times;</span>
                         <h3>User Settings</h3><hr>
 
                         <div class="settingsUserData">
@@ -53,18 +53,19 @@
                                 <h5>Personal Information</h5>
                                 <button>Edit</button>
                             </div>
-                            <div class="user-info-fields"><h6>Full Name:</h6> <div class="userProfileContainers"><p></p></div></div>
-                            <div class="user-info-fields"><h6>Email Address:</h6> <div class="userProfileContainers"><p></p></div></div>
-                            <div class="user-info-fields"><h6>Password:</h6> <div class="userProfileContainers"><p></p></div></div>
-                            <div class="user-info-fields"><h6>Location:</h6> <div class="userProfileContainers"><p></p></div></div>
-                            <div class="user-info-fields"><h6>Bio:</h6> <div class="userProfileContainers"><p></p></div></div>
+                            <div class="user-info-fields"><h6>Full Name: </h6> <div id="full-name-container"></div></div>
+                            <div class="user-info-fields"><h6>Username: </h6> <div id="username-container"></div></div>
+                            <div class="user-info-fields"><h6>Email Address: </h6> <div id="email-container"></div></div>
+                            <div class="user-info-fields"><h6>Password: </h6> <div id="password-container"><p></p></div></div>
+                            <div class="user-info-fields"><h6>Location: </h6> <div id="location-container"><p></p></div></div>
+                            <div class="user-info-fields"><h6>Bio: </h6> <div id="bioDisplay"><p></p></div></div>
                         <br><h5>Preferences</h5>
                         <h6><input type="checkbox" id="email-notis" name="email-notis" value="true">
                         <label for="email-notis">I'd like to receive email notifications.</label></h6>
 
                         <br><h5>Privacy</h5>
 
-                        <br><p style="color: rgb(143, 7, 7);">Delete Account</p>
+                        <br><button type="button" id="deleteAccount"><p style="color: rgb(143, 7, 7);">Delete Account</p></button>
                     </div>
                 </div>
             </div>
@@ -79,11 +80,30 @@
 
 <main>
 
+<div class="user-info-fields">
 <div class="userInfo">
     <div class="img-name">
-        <img src="../images/profile.png" alt="profile image" id="profile-img">
+        <button type="button" id="openAvatarModalButton"><img src="../images/profile.png" alt="profile image" id="profile-img"></button></li>
+        <div id="avatarModal" class="modal">
+            <div class="modal-content">
+            <span class="close" id="close-avatar">&times;</span>
+                <div id="userAvatarContainer"></div>
 
-        <div id="userDataContainer"></div>
+                <div id="defaultAvatar">
+                    <img src="../images/profile.png" alt="profile image" id="edit-profile-img">
+                </div>
+                
+                <hr>
+                <div class="edit-avatar-buttons">
+                    <button type="button"><img src="/images/delete-button.svg" class="edit-profile-img-icons">Delete</button><br>
+                    <button type="button"><img src="/images/camera-icon.png" class="edit-profile-img-icons">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="userDataContainer"></div>
     
 </div>
 
@@ -96,7 +116,8 @@
                 <button id="saveBio" class="btn btn-outline-dark">Save</button>
             </div>
         </div>
-        <div class="skillsDisplay">
+
+        <div class="skillsDisplay" id="skillsDisplay">
         <br><p><b>Skills</b></p>
         <img src="../images/skill-icons/procreate-icon.png">
         <img src="../images/skill-icons/photoshop-icon.png">
@@ -104,14 +125,22 @@
         <img src="../images/skill-icons/premiere-icon.jpg" style="height: 45px; width: 45px;">
         
         <button type="button" id="openSkillsModalButton">+</button>
+    </div>
+
         <div id="skillsModal" class="modal">
             <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Add Skills</h3>
+            <span class="close" id="close-skills">&times;</span>
+            <h3 class="skill-header">Add Skills</h3>
+            <form id="searchForm" class="skill-form">
+                <input type="text" name="searchQuery" placeholder="Adobe Lightroom" id="searchQuery">
+                <button type="submit" id="searchButton"><img src="../images/search.png" class="nav-icons"></button>
+                <button type="button" id="showAllSkills" class="btn btn-light">Show All</button>
+            </form>
+
+            <div id="searchResults"></div>
             </div>
         </div>
    
-    </div>
 
     </div>
 </div>

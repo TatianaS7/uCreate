@@ -25,7 +25,7 @@
     <!-- Run BEFORE page is finished loading (before window.onload): -->
     <script src="../auth.js"></script>
     <script>
-        if (isLoggedIn() === false) window.location.replace("/");
+        // if (isLoggedIn() === false) window.location.replace("/");
     </script>
 </head>
 
@@ -50,7 +50,9 @@
     
         <h1>MY SAVES</h1>
 
- <div class="savesContainers"> 
+        <button type="button" id="pocket-sign-in">Sign In with Pocket</button>
+
+ <!-- <div class="savesContainers"> 
 
     <h5>Users</h5>
     <div id="savedUsersContainer"></div>
@@ -63,8 +65,8 @@
 
     <h5>Polls</h5>
     <div id="savedPollsContainer"></div>
-    
-</div>  
+
+</div>   -->
 
 
 </div>

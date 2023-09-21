@@ -2,6 +2,7 @@
 body {
 background: whitesmoke;
 color: black;
+overflow: hidden;
 }
 
 /* NAVIGATION*/
@@ -57,11 +58,11 @@ text-decoration: none;
  /* END OF NAVIGATION */
 
  .intro-text {
-    margin: 60px;
+    margin: 25px 60px 10px 60px;
  }
 
  h1 {
-    font-size: 75px;
+    font-size: 72px;
  }
 
  p {
@@ -78,3 +79,35 @@ margin: 60px;
 max-width: 30%;
 color: black;
 }
+
+.canvas-wrapper {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 999;
+    display: block;
+}
+
+.sketch-spiral img {
+    height: 70px;
+    width: 560px;
+    padding-top: 20px;
+    /* background-color: white; */
+}
+
+#canvas-container {
+    width: 560px;
+    height: 300px;
+    background-color: white;
+    overflow: hidden;
+}
+
+.frame {
+        border:solid 10px #eee;
+        border-radius:2px;
+        box-shadow:0 0 5px 0 rgba(0,0,0,.25) inset, 0 5px 10px 5px rgba(0,0,0,.25);
+        height:320px;
+      }
+
+
+

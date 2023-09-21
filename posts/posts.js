@@ -4,9 +4,65 @@
 
 const logoutButton = document.querySelector("#logout");
 const postContainer = document.querySelector('#postContainer');
-const userPost = document.querySelector("#userPost");
+const userPostForm = document.querySelector("#userPostForm");
+const profileContainer = document.querySelector("#profileContainer");
+
+// SELECT POST TYPE
+const postOption = document.querySelector("#postTypeDropdown");
+const pollPost = document.querySelector("#pollPost");
+const mediaPost = document.querySelector("#mediaPost");
+const eventPost = document.querySelector("#eventPost");
+
 
 logoutButton.onclick = logout;
+
+//Form Submit
+
+function formSubmit() {
+userPostForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+  // profileContainer.replaceChildren();
+
+  const userPost = {
+    postType: postOption.value,
+    title: document.getElementById("postTitle"),
+    content: document.getElementById("userPost"),
+    tags: document.getElementById("tags")
+  };
+
+  sendData(userPost.postTitle.value && userPost.userPostArea.value);
+})
+};
+
+//Send Data
+function sendData() {
+  const loginData = getLoginData();
+  console.log(loginData);
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${loginData.token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ 
+      post_type: userPost.postType,
+      title: userPost.title,
+      content: userPost.content,
+      tags: userPost.tags 
+    }),
+  };
+
+  fetch(apiBaseURL + "/api/posts", options)
+    .then((response) => response.json())
+    .then((data) => {
+      postFetch();
+      console.log(data);
+    });
+
+};
+
+userPostForm.onsubmit = formSubmit;
+
 
 function convertDateTime(apiDateTime) {
     const date = new Date(apiDateTime);
@@ -14,10 +70,6 @@ function convertDateTime(apiDateTime) {
     return formattedDateTime;
 }
 
-//LIKES FEATURE
-function countLikes(likes) {
-    return likes.length;
-}
 
 function postFetch() {
     const loginData = getLoginData();
@@ -32,38 +84,40 @@ function postFetch() {
     fetch(apiBaseURL + "/api/posts", options)
         .then(response => response.json())
         .then(posts => {
-            posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+            console.log(posts);
 
             posts.forEach(post => {
-                if(window.localStorage.getItem(post._id) === null) {
+                if(window.localStorage.getItem(post.post_id) === null) {
                     const cardHTML = `
-                    <div class="card text-center" id="cards" data-post-id="${post._id}">
+                    <div class="card text-center" id="cards" data-post-id="${post.title}">
                     <div class="card-header">
                     <b>@${post.username}</b>
                     </div>
                     <div class="card-body">
-                    <p class="card-text">${post.text}</p>
+                    <p class="card-text"><i>${post.title}</i></p>
+
+                    <p class="card-text">${post.content}</p>
                     </div><br>
                     <div class="card-footer text-muted">
-                    ${convertDateTime(post.createdAt)}<br>
-                    <span class="likes-count">${countLikes(post.likes)} Likes</span>
-                    <button onmouseover="mouseOverEffect('${post._id}','${post.likes}')" onmouseout="mouseOutEffect('${post._id}')" class="like-button" id="${post._id}" onclick="likedOrNah('${post._id}')">❤</button>
+                    ${convertDateTime(post.created_at)}<br>
+                    <button onmouseover="mouseOverEffect('${post.title}')" onmouseout="mouseOutEffect('${post._id}')" class="like-button" id="${post._id}" onclick="likedOrNah('${post._id}')">❤</button>
                     </div>
                 </div>`;
                     postContainer.innerHTML += cardHTML;
                 } else {
                     const cardHTML = `
-                    <div class="card text-center" id="cards" data-post-id="${post._id}">
+                    <div class="card text-center" id="cards" data-post-id="${post.title}">
                     <div class="card-header">
                     <b>@${post.username}</b>
                     </div>
                     <div class="card-body">
-                    <p class="card-text" >${post.text}</p>
+                    <p class="card-text" >${post.content}</p>
                     </div><br>
                     <div class="card-footer text-muted">
-                    ${convertDateTime(post.createdAt)}<br>
-                    <span class="likes-count">${countLikes(post.likes)} Likes</span>
-                    <button onmouseover="mouseOverEffect('${post._id}','${post.likes}')" onmouseout="mouseOutEffect('${post._id}')" class="like-button liked" id="${post._id}" onclick="likedOrNah('${post._id}')">❤</button>
+                    ${convertDateTime(post.created_at)}<br>
+                    <button onmouseover="mouseOverEffect('${post.title}')" onmouseout="mouseOutEffect('${post._id}')" class="like-button liked" id="${post._id}" onclick="likedOrNah('${post._id}')">❤</button>
                     </div>
                     </div>`;
                     postContainer.innerHTML += cardHTML;
@@ -78,71 +132,6 @@ function postFetch() {
     
     window.onload = postFetch;
     
-    function likedOrNah(postId) {
-        if (window.localStorage.getItem(postId) === null) {
-            toggleLike(postId)
-        } else {
-            untoggleLike(postId)
-        }
-    }
-    
-    function toggleLike(postId) {
-        const loginData = getLoginData();
-        const likeButton = document.querySelector(`button[id='${postId}']`)
-        likeButton.classList.toggle('liked')
-        const options = {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${loginData.token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ postId: postId }),
-        };
-        
-        fetch(apiBaseURL + "/api/likes", options)
-        .then((response) => response.json())
-    .then((data) => {
-        window.localStorage.setItem(data.postId,data._id)
-        window.location.reload()
-    });
-    
-}
-
-function untoggleLike(postId) {
-    const loginData = getLoginData();
-    const likeButton = document.querySelector(`button[id='${postId}']`)
-    likeButton.classList.toggle('liked')
-    const endpoint = window.localStorage.getItem(postId)
-    const options = {
-        method: "DELETE",
-        headers: {
-            Authorization: `Bearer ${loginData.token}`,
-            "Content-Type": "application/json",
-        },
-    };
-    fetch(apiBaseURL + "/api/likes/" + endpoint, options)
-    .then((response) => response.json())
-    .then((data) => {
-        window.localStorage.removeItem(postId)
-        window.location.reload()
-    });
-}
-
-
-function mouseOverEffect(postId,postLikes) {
-    console.log(postId)
-    console.log(postLikes)
-    // postLikes.forEach(a=>console.log(a.username))
-    // postLikes.forEach(a=>console.log(a.username))
-    const likeButton = document.querySelector(`button[id='${postId}']`)
-    likeButton.classList.add('mousedOver')
-}
-
-function mouseOutEffect(postId) {
-    const likeButton = document.querySelector(`button[id='${postId}']`)
-    likeButton.classList.remove('mousedOver')
-}
-
 
 //New Post
 
@@ -165,11 +154,6 @@ function closeModal() {
 openModalButton.addEventListener('click', openModal);
 closeModalButton.addEventListener('click', closeModal);
 
-// SELECT POST TYPE
-const postOption = document.querySelector("#postTypeDropdown");
-const pollPost = document.querySelector("#pollPost");
-const mediaPost = document.querySelector("#mediaPost");
-const eventPost = document.querySelector("#eventPost");
 
 function postType() {
   const selectedType = postOption.value;
@@ -181,16 +165,16 @@ function postType() {
 
   // Show the selected form section based on the dropdown value
   if (selectedType === "Text") {
-    userPost.style.display = "block";
+    userPostForm.style.display = "block";
   } else if (selectedType === "Poll") {
     pollPost.style.display = "block";
-    userPost.style.display = "none";
+    userPostForm.style.display = "none";
   } else if (selectedType === "Media") {
     mediaPost.style.display = "block";
-    userPost.style.display = "none";
+    userPostForm.style.display = "none";
   } else if (selectedType === "Event") {
     eventPost.style.display = "block";
-    userPost.style.display = "none";
+    userPostForm.style.display = "none";
   }
 }
 //Add Poll Option
@@ -209,57 +193,64 @@ function addOption() {
   pollOptionsDiv.appendChild(newOptionDiv);
 }
 
-userPost.onsubmit = formSubmit;
+const searchForm = document.querySelector("#searchForm");
+const searchQueryInput = document.querySelector("#searchQuery");
+const tagSearchContainer = document.querySelector("#tagSearchContainer");
+const searchTagButton = document.querySelector("#searchButton");
 
-//EVENT GEOCODING
-// const address = '1600 Amphitheatre Parkway, Mountain View, CA'; // Replace this with the user-selected address
-// const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace this with your actual API key
+searchTagButton.addEventListener("submit", function(event) {
+  event.preventDefault();
 
-// const geocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+  const searchQuery = searchQueryInput.value.trim();
 
-// fetch(geocodingUrl)
-//   .then(response => response.json())
-//   .then(data => {
-//     if (data.results && data.results.length > 0) {
-//       const location = data.results[0].geometry.location;
-//       const latitude = location.lat;
-//       const longitude = location.lng;
-
-//       // Now you can use the latitude and longitude values as needed.
-//     } else {
-//       console.error('Geocoding failed or returned no results.');
-//     }
-//   })
-//   .catch(error => {
-//     console.error('Error while geocoding:', error);
-//   });
-
-
-//Form Submit
-function formSubmit(event) {
-    event.preventDefault();
-    profileContainer.replaceChildren();
-    sendData(userPost.userPostArea.value);
+  if (searchQuery !== "") {
+    searchDatabase(searchQuery);
   }
-  
-  //Send Data
-  function sendData(postContent) {
-    const loginData = getLoginData();
-    console.log(loginData);
-    const options = {
-      method: "POST",
+});
+
+
+function searchDatabase(query) {
+  const loginData = getLoginData();
+
+  const options = {
+      method: "GET",
       headers: {
-        Authorization: `Bearer ${loginData.token}`,
-        "Content-Type": "application/json",
+          Authorization: `Bearer ${loginData.token}`,
       },
-      body: JSON.stringify({ text: postContent }),
-    };
-  
-    fetch(apiBaseURL + "/api/posts", options)
-      .then((response) => response.json())
-      .then((data) => {
-        profileFetch();
-        console.log(data);
+  };
+
+  searchResultsContainer.innerHTML = "";
+
+  fetch (`${apiBaseURL}/api/search/tags?q=${encodeURIComponent(query)}`, options)
+    .then(response => response.json())
+    .then(searchResults => {
+      displaySearchResults(searchResults);
+
+    })
+    .catch(error => {
+      console.error("Search error:", error);
+    });
+}
+
+function displaySearchResults(results) {
+  let resultsHTML = "";
+
+  // Display Tags
+  if (results.tags.count > 0) {
+      results.tags.data.forEach(tags => {
+          resultsHTML += `
+          <div class="card">
+            <div class="card-header"></div>
+            <div class="card-body">
+                <p class="card-text">${tags.tag_name}</p>
+              </div>
+          </div><br>`;
       });
+  } else {
+      resultsHTML += "<p>No tags found.</p>";
   }
-  
+
+  // Set the HTML content of the tagSearchContainer
+  tagSearchContainer.innerHTML = resultsHTML;
+}
+

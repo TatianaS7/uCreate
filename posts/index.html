@@ -25,7 +25,7 @@
     <!-- Run BEFORE page is finished loading (before window.onload): -->
     <script src="../auth.js"></script>
     <script>
-        if (isLoggedIn() === false) window.location.replace("/");
+        // if (isLoggedIn() === false) window.location.replace("/"); //Commented out garden wall for testing
     </script>
 </head>
 
@@ -60,13 +60,20 @@
             </select>   
             
 <!-- TEXT POST-->
-        <form id="userPost" style="display: block;">
+        <form id="userPostForm" style="display: block;">
             <br><label for="postTitle">Title:</label><br>
             <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
 
             <label for="userPostArea">Content:</label><br>
             <textarea name="userPostArea" id="userPostArea" cols="60" rows="8" class="userPostArea"></textarea><br><br>
-            
+
+            <h5>Tags:</h5><br>
+            <form id="searchForm">
+                <input type="text" name="searchQuery" placeholder="Search tags.." id="searchQuery">
+                <button type="submit" id="searchButton"><img src="../images/search.png" class="nav-icons"></button>
+            </form>
+            <div id="tagSearchContainer"></div><br>
+
             <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
         </form>
 <!-- POLL POST-->
@@ -141,8 +148,16 @@
 <div class="content">
     
     <header>
-        <h1>POSTS</h1>
+        <h1>FEED</h1>
     </header>
+
+    <legend>Filter By:</legend>
+    <select>
+        <option>All Posts</option>
+        <option>Events</option>
+        <option>Media</option>
+    </select>
+    
 
     <main>
       <div id="postContainer"></div>
@@ -150,7 +165,6 @@
     </main>
 
 </div>
-    <footer></footer>
 
     <!-- Page-specific code -->
     <script src="./posts.js"></script>

@@ -6,9 +6,10 @@ const registrationForm = document.querySelector("#registrationForm")
 function formSubmit(event) {
     event.preventDefault()
     const userInfoCont = {
-        username:registrationForm.userNameInput.value,
-        fullName:registrationForm.fullNameInput.value,
+        full_name:registrationForm.full_nameInput.value,
+        username:registrationForm.usernameInput.value,
         password:registrationForm.passwordInput.value,
+        email:registrationForm.emailInput.value
     }
     userInfoFetch(userInfoCont)
 }
@@ -22,7 +23,7 @@ function userInfoFetch (userInfo) {
         body: JSON.stringify(userInfo),
     };
 
-    return fetch(apiBaseURL + "/api/users", options)
+    return fetch(apiBaseURL + "/api/register", options)
         .then(response => response.json())
         .then(loginData => {
             window.location.assign("../")   

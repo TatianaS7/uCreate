@@ -155,3 +155,21 @@ body {
   #locationText h3{
     margin-left: 20px;
   }
+
+.modal-content {
+    height: 80%;
+    overflow: scroll;
+  }
+
+  .card-title{
+    flex-wrap: nowrap;
+}
+
+.recent-searches {
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+#searchResults {
+    margin: 20px;
+}
