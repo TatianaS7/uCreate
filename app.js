@@ -111,14 +111,26 @@ app.post("/auth/login", async (req, res) => {
       return res.status(401).json({ statusCode: 401, error: "Invalid password" });
     }
 
-const getUserData = "SELECT idUsers, username, avatar FROM users WHERE username = ?";
-const [userData] = await pool.query(getUserData, [user]);
+// const getUserData = "SELECT idUsers, username, avatar FROM users WHERE username = ?";
+// const [userData] = await pool.query(getUserData, [user]);
 
-    const accessToken = jwt.sign({ userId: userData.user }, secretKey, {
+    const accessToken = jwt.sign({ userId: user[0].idUsers }, secretKey, {
       expiresIn: "1h",
     });
 
-    res.status(200).json({ statusCode: 200, message: "Authentication successful!", accessToken, user: userData });
+    res.status(200).json({ 
+      statusCode: 200, 
+      message: "Authentication successful!", 
+      accessToken, 
+    user: {
+      user_id: user[0].idUsers, 
+      full_name: user[0].full_name, 
+      username: user[0].username, 
+      email: user[0].email, 
+      avatar: user[0].avatar, 
+      bio: user[0].bio
+    } 
+});
 
   } catch (error) {
     console.error("Error authenticating account:", error);
@@ -127,8 +139,8 @@ const [userData] = await pool.query(getUserData, [user]);
 });
 
 //Update User Info
-app.put("/api/users/:username/profile", async (req, res) => {
-  const current_user = req.params.username;
+app.put("/api/users/:idUsers/profile", async (req, res) => {
+  const current_user = req.params.idUsers;
   const { username, newPassword, email, bio, avatar } = req.body;
 
   try {
@@ -139,7 +151,7 @@ app.put("/api/users/:username/profile", async (req, res) => {
     }
 
     const updateProfile =
-      "UPDATE users SET username = ?, password = ?, email = ?, bio = ?, avatar = ? WHERE current_user = ?";
+      "UPDATE users SET username = ?, password = ?, email = ?, bio = ?, avatar = ? WHERE idUsers = ?";
 
     await pool.query(updateProfile, [
       username,

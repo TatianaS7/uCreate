@@ -2,156 +2,169 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<header>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <header>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-        crossorigin="anonymous"></script>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
 
-    <!-- Global CSS (CSS rules you want applied to all pages) -->
-    <link rel="stylesheet" href="../global.css">
+        <!-- Global CSS (CSS rules you want applied to all pages) -->
+        <link rel="stylesheet" href="../global.css">
 
-    <!-- Page-specific CSS -->
-    <link rel="stylesheet" href="./explore.css">
+        <!-- Page-specific CSS -->
+        <link rel="stylesheet" href="./explore.css">
 
-    <title>Explore | YouCreate</title>
+        <title>Explore | YouCreate</title>
 
-    <!-- Run BEFORE page is finished loading (before window.onload): -->
-    <script src="../auth.js"></script>
-    <script>
+        <!-- Run BEFORE page is finished loading (before window.onload): -->
+        <script src="../auth.js"></script>
+        <script>
         // if (isLoggedIn() === false) window.location.replace("/");
-    </script>
-</header>
+        </script>
+    </header>
 
-<body>
+    <body>
 
-<div class="navbar">
-    <div class="navbar-logo">
-        <a href="../index.html"> <img src="../images/UCreate.PNG" alt="YouCreate"></a>
-    </div>
+        <div class="navbar">
+            <div class="navbar-logo">
+                <a href="../posts/index.html"> <img src="../images/ucreate-logo.png" alt="YouCreate"></a>
+            </div>
 
-    <div class="page-links">
-        <ul>
-            <li><button id="openModalButton"><img src="../images/search.png" class="nav-icons"</button></li>
-            <div id="searchModal" class="modal">
-                <div class="modal-content">
-                <!-- Add your search form or search content here -->
-                <span class="close">&times;</span>
-                <form id="searchForm">
-                    <input type="text" name="searchQuery" placeholder="NYFW 2023" id="searchQuery">
-                    <button type="submit" id="searchButton"><img src="../images/search.png" class="nav-icons"></button>
-                </form>
-                <br><h3 class="recent-searches">Recent Searches</h3>
+            <div class="page-links">
+                <ul>
+                    <li><button id="openModalButton"><img src="../images/search.png" class="nav-icons" </button></li>
+                    <div id="searchModal" class="modal">
+                        <div class="modal-content">
+                            <!-- Add your search form or search content here -->
+                            <span class="close">&times;</span>
+                            <form id="searchForm">
+                                <input type="text" name="searchQuery" placeholder="NYFW 2023" id="searchQuery">
+                                <button type="submit" id="searchButton"><img src="../images/search.png"
+                                        class="nav-icons"></button>
+                            </form>
+                            <br>
+                            <h3 class="recent-searches">Recent Searches</h3>
 
-                <div id="searchResults"></div>
+                            <div id="searchResults"></div>
+                        </div>
+                    </div>
+
+                    <li><a href="../profile/index.html"><img src="../images/profile.png" id="profile"></a></li>
+                    <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+
+        <div class="content">
+
+            <h1>EXPLORE</h1>
+            <hr>
+
+            <br>
+            <h3>For You</h3>
+            <div class="forYouContent">
+                <div class="card bg-dark text-white" id="basquiat">
+                    <img class="card-img" src="../images/basquiat.JPG" alt="Card image">
+                    <div class="card-img-overlay">
+                        <h3 class="card-title">Basquiat</h3>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="card-text">5 Minute Read</p>
+                    </div>
+                </div>
+
+                <div class="card bg-dark text-white" id="photoshop">
+                    <img class="card-img" src="../images/oilPaint.jpg" alt="Card image">
+                    <div class="card-img-overlay">
+                        <h3 class="card-title">Top 10 Oil Paint Brands</h3>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="card-text">3 Minute Read</p>
+                    </div>
+                </div>
+
+                <div class="card bg-dark text-white" id="photoshop">
+                    <img class="card-img" src="../images/photoshop.png" alt="Card image">
+                    <div class="card-img-overlay">
+                        <h3 class="card-title">Photoshop Fundamentals</h3>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="card-text">10 Minute Read</p>
+                    </div>
+                </div>
+
+            </div>
+            <hr><br>
+
+            <h3>Trending</h3>
+            <div class="trendingContent">
+                <div class="card bg-dark text-white" id="photoshop">
+                    <img class="card-img" src="../images/aswm.jpg" alt="Card image">
+                    <div class="card-img-overlay">
+                        <h3 class="card-title">Atlanta Streetwear Market</h3>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="card-text">Atlanta, Georgia</p>
+                    </div>
+                </div>
+                <div class="card bg-dark text-white" id="basquiat">
+                    <img class="card-img" src="../images/paintNsit.JPG" alt="Card image">
+                    <div class="card-img-overlay">
+                        <h3 class="card-title">Paint 'N Sit</h3>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="card-text">Atlanta, Georgia</p>
+                    </div>
+                </div>
+                <div class="card bg-dark text-white" id="photoshop">
+                    <img class="card-img" src="../images/virgil.jpg" alt="Card image">
+                    <div class="card-img-overlay">
+                        <h3 class="card-title">Virgil Abloh</h3>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="card-text">10 Minute Read</p>
+                    </div>
+                </div>
+
+            </div>
+            <hr><br>
+
+            <h3>Locations</h3>
+            <div class="eventsContent">
+                <div class="card bg-dark text-white" id="location">
+                    <img class="card-img" src="../images/midtown.jpg" alt="Card image">
+                    <div class="card-img-overlay">
+                        <h3 class="card-title" id="locationText">Atlanta, GA</h3>
+                    </div>
+                </div>
+                <div class="card bg-dark text-white" id="location">
+                    <img class="card-img" src="../images/laJolla.jpg" alt="Card image">
+                    <div class="card-img-overlay">
+                        <h3 class="card-title" id="locationText">La Jolla, CA</h3>
+                    </div>
                 </div>
             </div>
 
-            <li><a href="../profile/index.html" ><img src="../images/profile.png" id="profile"></a></li>
-            <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
-        </ul>
-    </div>
-
-</div><hr>
-
-<div class="content">
-    
-        <h1>EXPLORE</h1><hr>
-
-    <br><h3>For You</h3>
-    <div class="forYouContent">
-        <div class="card bg-dark text-white" id="basquiat">
-            <img class="card-img" src="../images/basquiat.JPG" alt="Card image">
-            <div class="card-img-overlay">
-            <h3 class="card-title">Basquiat</h3>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <p class="card-text">5 Minute Read</p>
-            </div>
         </div>
 
-        <div class="card bg-dark text-white" id="photoshop">
-            <img class="card-img" src="../images/oilPaint.jpg" alt="Card image">
-            <div class="card-img-overlay">
-            <h3 class="card-title">Top 10 Oil Paint Brands</h3>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <p class="card-text">3 Minute Read</p>
-            </div>
+
+        <main>
+            <div id="contentContainer"></div>
+
+        </main>
+
         </div>
 
-        <div class="card bg-dark text-white" id="photoshop">
-            <img class="card-img" src="../images/photoshop.png" alt="Card image">
-            <div class="card-img-overlay">
-            <h3 class="card-title">Photoshop Fundamentals</h3>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <p class="card-text">10 Minute Read</p>
-            </div>
-        </div>
-
-    </div><hr><br>
-
-    <h3>Trending</h3>
-    <div class="trendingContent">
-        <div class="card bg-dark text-white" id="photoshop">
-            <img class="card-img" src="../images/aswm.jpg" alt="Card image">
-            <div class="card-img-overlay">
-            <h3 class="card-title">Atlanta Streetwear Market</h3>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <p class="card-text">Atlanta, Georgia</p>
-            </div>
-        </div>
-        <div class="card bg-dark text-white" id="basquiat">
-            <img class="card-img" src="../images/paintNsit.JPG" alt="Card image">
-            <div class="card-img-overlay">
-            <h3 class="card-title">Paint 'N Sit</h3>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <p class="card-text">Atlanta, Georgia</p>
-            </div>
-        </div>
-        <div class="card bg-dark text-white" id="photoshop">
-            <img class="card-img" src="../images/virgil.jpg" alt="Card image">
-            <div class="card-img-overlay">
-            <h3 class="card-title">Virgil Abloh</h3>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <p class="card-text">10 Minute Read</p>
-            </div>
-        </div>
-
-    </div><hr><br>
-
-    <h3>Locations</h3>
-    <div class="eventsContent">
-        <div class="card bg-dark text-white" id="location">
-            <img class="card-img" src="../images/midtown.jpg" alt="Card image">
-            <div class="card-img-overlay">
-            <h3 class="card-title" id="locationText">Atlanta, GA</h3>
-            </div>
-        </div>
-        <div class="card bg-dark text-white" id="location">
-            <img class="card-img" src="../images/laJolla.jpg" alt="Card image">
-            <div class="card-img-overlay">
-            <h3 class="card-title" id="locationText">La Jolla, CA</h3>
-            </div>
-        </div>
-        </div>
-
-    </div>
-
-
-    <main>
-      <div id="contentContainer"></div>
-
-    </main>
-
-</div>
-
-    <!-- Page-specific code -->
-    <script src="./explore.js"></script>
-</body>
+        <!-- Page-specific code -->
+        <script src="./explore.js"></script>
+    </body>
 
 </html>

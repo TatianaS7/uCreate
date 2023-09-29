@@ -82,17 +82,10 @@ color: black;
 
 .canvas-wrapper {
     position: fixed;
-    bottom: 50px;
+    bottom: 35px;
     right: 50px;
     z-index: 999;
     display: block;
-}
-
-.sketch-spiral img {
-    height: 70px;
-    width: 560px;
-    padding-top: 20px;
-    /* background-color: white; */
 }
 
 #canvas-container {
@@ -103,11 +96,17 @@ color: black;
 }
 
 .frame {
-        border:solid 10px #eee;
-        border-radius:2px;
-        box-shadow:0 0 5px 0 rgba(0,0,0,.25) inset, 0 5px 10px 5px rgba(0,0,0,.25);
-        height:320px;
-      }
+    border:solid 10px #eee;
+    border-radius:2px;
+    box-shadow:0 0 5px 0 rgba(0,0,0,.25) inset, 0 5px 10px 5px rgba(0,0,0,.25);
+    height:320px;
+}
+
+#refresh {
+    box-shadow:0 0 5px 0 rgba(0,0,0,.25);
+    margin-top: 10px;
+    float: right;
+}
 
 
 

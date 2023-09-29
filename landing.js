@@ -40,8 +40,8 @@ const canvas = document.getElementById('art-area');
 const context = canvas.getContext('2d');
 
 // Set canvas size to match its container
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = 560;
+canvas.height = 300;
 
 const colors = ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#8b00ff'];
 let currentColorIndex = 0;

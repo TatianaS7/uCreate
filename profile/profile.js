@@ -10,6 +10,12 @@ const usernameContainer = document.querySelector("#username-container");
 const emailContainer = document.querySelector("#email-container");
 const passwordContainer = document.querySelector("#password-container");
 const fullNameContainer = document.querySelector("#full-name-container");
+const userAvatarContainer = document.querySelector('#userAvatarContainer');
+const userProfileImgContainer = document.querySelector('#userProfileImg');
+const defaultAvatar = document.querySelector('#defaultAvatar');
+const defaultProfileImg = document.querySelector('#defaultProfileImg');
+const settingsBioContainer = document.querySelector('#settings-bio-container');
+
 
 logoutButton.onclick = logout;
 saveBioButton.onclick = saveBio;
@@ -22,18 +28,18 @@ function convertDateTime(apiDateTime) {
 
 //Display Your Posts
 function profileFetch() {
-  const loginData = getLoginData();
+  const response = getresponse();
   const options = {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${loginData.token}`,
+      Authorization: `Bearer ${response.token}`,
     },
   };
 
-  fetch(apiBaseURL + "/api/posts?username=" + loginData.username, options)
+  fetch(apiBaseURL + "/api/posts?username=" + response.username, options)
     .then((response) => response.json())
     .then((userProfiles) => {
-      userProfiles.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      userProfiles.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
       let postHTML = "";
 
@@ -60,22 +66,24 @@ function profileFetch() {
 }
 
 //Display User Info
-function displayUserData() {
+function displayresponse() {
 
-  const loginData = getLoginData();
+  const response = getresponse();
 
   const options = {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${loginData.token}`,
+      Authorization: `Bearer ${response.token}`,
     },
   };
 
-  fetch(apiBaseURL + `/api/users/${loginData.username}`, options)
+  const userData = response.user;
+
+  fetch(apiBaseURL + `/api/users/${userData.user_id}`, options)
+    .then(response => response.json())
     .then(response => {
-      return response.json();
-    })
-    .then(userData => {
+
+      console.log(userData);
         
         const data = `
         <h4> <b>${userData.full_name}</b></h4>
@@ -84,6 +92,7 @@ function displayUserData() {
 
         const bio = `${userData.bio}`;
         bioDisplay.textContent = bio || "No bio yet!";
+        settingsBioContainer.textContent = bio || "No bio yet!"
 
         const fullName = `${userData.full_name}`;
         fullNameContainer.textContent = fullName || "Working on it.";
@@ -93,6 +102,22 @@ function displayUserData() {
 
         const username = `${userData.username}`;
         usernameContainer.textContent = username;
+
+        const avatar = `<img src = "${userData.avatar}">`;
+        if (userData.avatar) {
+          defaultAvatar.style.display = "none";
+          defaultProfileImg.style.display = "none";
+
+          userAvatarContainer.innerHTML = avatar;
+          userProfileImgContainer.innerHTML = avatar;
+  
+        } else {
+          defaultAvatar.style.display = "block";
+          defaultProfileImg.style.display = "block";
+          
+          userAvatarContainer.style.display = "none";
+          userProfileImgContainer.style.display = "none";
+        }
       })
       .catch(error => {
         console.error("Error:", error);
@@ -101,7 +126,9 @@ function displayUserData() {
 
 //Update User Info
 function updateUserInfo() {
-  const loginData = getLoginData();
+  const response = getresponse();
+  const userId = response.user.idUsers;
+
   const newUsername = usernameContainer.value;
   const newPassword = passwordContainer.value;
   const newEmail = emailContainer.value;
@@ -110,21 +137,22 @@ function updateUserInfo() {
 
   const updates = { username: newUsername, password: newPassword, email: newEmail, bio: newBio, avatar: newAvatar };
   
-updateUserInfo(updates);
 
   const options = {
     method: "PUT",
     headers: {
-      Authorization: `Bearer ${loginData.token}`,
+      Authorization: `Bearer ${response.token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(updates),
+    body: JSON.stringify( { userId, updates }),
   };
 
-  fetch(apiBaseURL + `/api/users/${loginData.username}` + "/profile", options)
+  fetch(apiBaseURL + `/api/users/${userId}/profile`, options)
     .then(response => response.json())
     .then(data => {
-      displayUserData();
+      displayresponse();
+
+      console.log(data);
     })
     .catch(error => {
       console.error(error);
@@ -148,16 +176,16 @@ window.onload = main;
 
 function main() {
   profileFetch();
-  displayUserData();
+  displayresponse();
 }
 
 //DELETE POSTS
 function deletePost(postId) {
-    const loginData = getLoginData();
+    const response = getresponse();
     const options = {
       method: "DELETE",
       headers: {
-      Authorization: `Bearer ${loginData.token}`,
+      Authorization: `Bearer ${response.token}`,
       "Content-Type": "application/json",
     },
   };
@@ -242,12 +270,12 @@ searchForm.addEventListener("submit", function (event) {
 
 //Search for skills
 function searchDatabase(query) {
-  const loginData = getLoginData();
+  const response = getresponse();
 
   const options = {
       method: "GET",
       headers: {
-          Authorization: `Bearer ${loginData.token}`,
+          Authorization: `Bearer ${response.token}`,
       },
   };
 
@@ -294,12 +322,12 @@ function displaySearchResults(results) {
 function showAllSkills() {
   let allSkills = "";
 
-  const loginData = getLoginData();
+  const response = getresponse();
 
   const options = {
       method: "GET",
       headers: {
-          Authorization: `Bearer ${loginData.token}`,
+          Authorization: `Bearer ${response.token}`,
       },
   };
 
@@ -334,18 +362,18 @@ const profileSkillsContainer = document.querySelector("#skillsDisplay");
 const addSkillButton = document.querySelector("#add-profile-skill");
 
 function addSkillToProfile(skillId) {
-  const loginData = getLoginData();
+  const response = getresponse();
 
   const options = {
       method: "GET",
       headers: {
-          Authorization: `Bearer ${loginData.token}`,
+          Authorization: `Bearer ${response.token}`,
       },
       body: JSON.stringify({ skillId }),
   };
 
   let allUserSkills = '';
-  fetch (apiBaseURL + `/api/users/:username/skills`, options)
+  fetch (apiBaseURL + `/api/users/${response.user.user_id}/skills`, options)
     .then(response => response.json())
     .then(user_skills => {
       user_skills.forEach(userSkill => {

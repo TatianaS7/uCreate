@@ -43,7 +43,7 @@ hr {
 /* END OF NAVIGATION */
    
 
-#profile-img {
+#profile-img, #userProfileImg img {
     max-height: 90px;
     margin-bottom: 20px;
     margin-top: 0;
@@ -234,9 +234,16 @@ width: 40px;
     background-color: whitesmoke;
 }
 
-#edit-profile-img {
+#edit-profile-img, #userProfileImg img, #userAvatarContainer img {
     max-height: 3in;
     max-width: 3in;
+    margin: 20px;
+    border-style: solid;
+}
+
+#userAvatarContainer {
+    display: flex;
+    justify-content: center;
 }
 
 .edit-profile-img-icons {
@@ -247,6 +254,7 @@ width: 40px;
 .edit-avatar-buttons {
     display: flex;
     justify-content: center;
+    gap: 1em;
 }
 
 .edit-avatar-buttons button{
@@ -282,11 +290,52 @@ width: 40px;
 
 .user-info-fields {
     display: flex;
-    justify-content: space-between;
+    gap: 1em;
+    margin-bottom: 8px;
+}
+
+.user-info-fields-main {
+    display: flex;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.user-info-containers {
+    background-color: whitesmoke;
+    width: max-content ;
+    padding: 6px 15px 6px 15px;
+    border-radius: 10px;
+    font-weight: lighter;
+    flex: 1;
+    text-align: left;
+}
+
+#settings-container {
+    display: flex;
+    margin-left: 30px;
+    margin-right: 40px;
+}
+
+#left-side-settings {
+    margin-right: 70px;
+    width: 100%;
+}
+
+#right-side-settings {
+    border-left-style: solid;
+    border-left-color: whitesmoke;
+    padding-left: 20px;
 }
 
 .modal-content {
     height: 80%;
+}
+
+#avatarModal .modal-content {
+    max-width: 40%;
+    min-width: fit-content;
+    max-height: 70%;
+    min-height: fit-content;
 }
 
 #searchResults {
@@ -325,4 +374,9 @@ box-shadow: 10px 10px 5px darkgrey; } */
 .settingsUserData {
     overflow-y: scroll;
     overflow-x: hidden;
+}
+
+#settings-bio-container {
+    width: 450px;
+    height: 100px;
 }

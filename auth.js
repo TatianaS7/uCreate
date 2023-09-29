@@ -2,13 +2,15 @@
 
 "use strict";
 
+// const { response } = require("express");
+
 const apiBaseURL = "http://localhost:3000";
 
 
 // You can use this function to get the login data of the logged-in
 // user (if any). It returns either an object including the username
 // and token, or an empty object if the visitor is not logged in.
-function getLoginData () {
+function getresponse () {
     const loginJSON = window.localStorage.getItem("login-data");
     return JSON.parse(loginJSON) || {};
 }
@@ -17,15 +19,16 @@ function getLoginData () {
 // You can use this function to see whether the current visitor is
 // logged in. It returns either `true` or `false`.
 function isLoggedIn () {
-    const loginData = getLoginData();
-    return Boolean(loginData.token);
+    const response = getresponse();
+    return Boolean(response.token);
 }
+    console.log(isLoggedIn());
 
 // This function is already being used in the starter code for the
 // landing page, in order to process a user's login. READ this code,
 // and feel free to re-use parts of it for other `fetch()` requests
 // you may need to write.
-function login (loginData) {
+async function login (response) {
     // POST /auth/login
     const options = { 
         method: "POST",
@@ -35,44 +38,38 @@ function login (loginData) {
             // JSON data.
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(loginData),
+        body: JSON.stringify(response),
     };
 
-    return fetch(apiBaseURL + "/auth/login", options)
-        .then(response => response.json())
-        .then(loginData => {
+    try {
+    const loginResponse = await fetch(apiBaseURL + "/auth/login", options)
+    const responseData = await loginResponse.json();
 
-            if(loginData.statusCode === 200) { //ERROR, refreshing instead of redirecting
-                window.localStorage.setItem("login-data", JSON.stringify(loginData));
+    console.log("Response data:", responseData);
+
+            if(responseData.statusCode === 200) { 
+
+                window.localStorage.setItem("login-data", JSON.stringify(responseData));
                 window.location.assign("/posts");  // redirect
-                return loginData;
+                return responseData;
 
             } else {
                 alert("The login information is incorrect.")
             }
-        })
-        .catch(error => {
+        }
+        catch (error) {
             console.error("Login error:", error);
             alert("Error logging in, try again later.")
-        })
+        }
 }
 
-// Function to store the access token in local storage
-function storeAccessToken(token) {
-    window.localStorage.setItem("access-token", token);
-}
-
-// Function to store user data in local storage
-function storeUserData(user) {
-    window.localStorage.setItem("user-data", JSON.stringify(user));
-}
 
 // This is the `logout()` function you will use for any logout button
 // which you may include in various pages in your app. Again, READ this
 // function and you will probably want to re-use parts of it for other
 // `fetch()` requests you may need to write.
 function logout () {
-    const loginData = getLoginData();
+    const response = getresponse();
 
     // GET /auth/logout
     const options = { 
@@ -82,7 +79,7 @@ function logout () {
             // server for any API requests which require the user
             // to be logged-in in order to have access.
             // In the API docs, these endpoints display a lock icon.
-            Authorization: `Bearer ${loginData.token}`,
+            Authorization: `Bearer ${response.token}`,
         },
     };
 

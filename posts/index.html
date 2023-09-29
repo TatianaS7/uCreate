@@ -2,172 +2,181 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-        crossorigin="anonymous"></script>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
 
-    <!-- Global CSS (CSS rules you want applied to all pages) -->
-    <link rel="stylesheet" href="../global.css">
+        <!-- Global CSS (CSS rules you want applied to all pages) -->
+        <link rel="stylesheet" href="../global.css">
 
-    <!-- Page-specific CSS -->
-    <link rel="stylesheet" href="./posts.css">
+        <!-- Page-specific CSS -->
+        <link rel="stylesheet" href="./posts.css">
 
-    <title>Posts | CraftsHQ</title>
+        <title>Posts | CraftsHQ</title>
 
-    <!-- Run BEFORE page is finished loading (before window.onload): -->
-    <script src="../auth.js"></script>
-    <script>
+        <!-- Run BEFORE page is finished loading (before window.onload): -->
+        <script src="../auth.js"></script>
+        <script>
         // if (isLoggedIn() === false) window.location.replace("/"); //Commented out garden wall for testing
-    </script>
-</head>
+        </script>
+    </head>
 
-<body>
+    <body>
 
-<div class="navbar">
-    <div class="navbar-logo">
-        <a href="../index.html"> <img src="../images/UCreate.PNG" alt="YouCreate"></a>
-        <a href="../explore/index.html" id="explore"><b>Explore</b></a>
-    </div>
-
-    <div class="page-links">
-        <ul>              
-            <li><a href="../profile/index.html" ><img src="../images/profile.png" id="profile"></a></li>
-            <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
-        </ul>
-    </div>
-
-</div><hr>
-
-<div id="post-controls">
-    <button type="button" id="openModalButton">+</button>
-    <div id="postModal" class="modal">
-        <div class="modal-content">
-        <span class="close">&times;</span>
-            <h4>Create New Post</h4><br>
-            <select id="postTypeDropdown" onchange="postType()">
-                <option value="Text">Text</option>
-                <option value="Poll">Poll</option>
-                <option value="Media">Media</option>
-                <option value="Event">Event</option>
-            </select>   
-            
-<!-- TEXT POST-->
-        <form id="userPostForm" style="display: block;">
-            <br><label for="postTitle">Title:</label><br>
-            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
-
-            <label for="userPostArea">Content:</label><br>
-            <textarea name="userPostArea" id="userPostArea" cols="60" rows="8" class="userPostArea"></textarea><br><br>
-
-            <h5>Tags:</h5><br>
-            <form id="searchForm">
-                <input type="text" name="searchQuery" placeholder="Search tags.." id="searchQuery">
-                <button type="submit" id="searchButton"><img src="../images/search.png" class="nav-icons"></button>
-            </form>
-            <div id="tagSearchContainer"></div><br>
-
-            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
-        </form>
-<!-- POLL POST-->
-        <br><form id="pollPost" style="display: none;">
-            <div class = "newPostContainer" style="display: flex;">
-
-            <div class="media">
-                <label for="pollMedia">Upload Media (Optional):</label><br><br>
-                <input type="file" accept="image/*, media/*" name="pollMedia" id="pollMedia"><br><br>
+        <div class="navbar">
+            <div class="navbar-logo">
+                <a href="../posts/index.html"> <img src="../images/ucreate-logo.png" alt="YouCreate"></a>
+                <a href="../explore/index.html" id="explore"><b>Explore</b></a>
             </div>
-            <hr><br>
-            <div class="post-content">
-            <label for="pollQuestion">Poll Question:</label><br>
-                <input type="text" name="pollQuestion" id="pollQuestion" required class="postInput"><br><br>
 
-                <label for="pollOptions">Poll Options:</label>
-                <div id="pollOptions">
-                    <div>
-                        <input type="text" name="option1" required class="pollInput">
-                    </div>
-                </div><br><br>
-                <button type="button" onclick="addOption()">Add Option</button><br><br>
+            <div class="page-links">
+                <ul>
+                    <li><a href="../profile/index.html"><img src="../images/profile.png" id="profile"></a></li>
+                    <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
+                </ul>
             </div>
-            </div>
-                <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
-            </form>
-<!-- MEDIA POST-->
-        <form id="mediaPost" enctype="multipart/form-data" style="display: none;">
-            <div class = "newPostContainer" style="display: flex;">
-                <div class="media">
-                    <label for="mediaUpload">Upload Media:</label><br><br>
-                    <input type="file" accept="image/*, video/*, audio*/" name="mediaUpload" id="mediaUpload" required><br><br>
-                </div>
-                <div class="post-content">
-                    <br><label for="postTitle">Title:</label><br>
-                    <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
 
-                    <label for="description">Description:</label><br>
-                    <textarea name="description" id="description" cols="60" rows="3" class="userPostArea"></textarea><br><br>
-                </div>
-            </div>
-            <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
-        </form>
-
-<!-- EVENT POST-->
-            <form id="eventPost" enctype="multipart/form-data" style="display: none;">
-                <label for="eventMedia">Upload Media (Optional):</label><br><br>
-                <input type="file" accept="image/*, media/*" name="eventMedia" id="eventMedia"><br><br>
-                <hr><br>
-                <div class="event-content">
-                <div class="event-details">
-                    <label for="eventName">Event Name:</label><br>
-                    <input type="text" name="eventName" id="eventName" required class="postInput"><br><br>
-
-                    <label for="eventDate">Date:</label><br>
-                    <input type="date" name="eventDate" id="eventDate" required class="postInput"><br><br>
-
-                    <label for="eventLocation">Location:</label><br>
-                    <input type="text" name="eventLocation" id="eventLocation" required class="postInput"><br><br>
-                    </div>
-                    <div class="event-description">
-                        <label for="description">Description:</label><br>
-                        <textarea name="description" id="description" cols="60" rows="8" class="userPostArea"></textarea><br><br>
-                    </div>
-                </div>
-                <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
-            </form>
         </div>
-    </div>
-</div>
+        <hr>
 
-<div class="content">
-    
-    <header>
-        <h1>FEED</h1>
-    </header>
+        <div id="post-controls">
+            <button type="button" id="openModalButton">+</button>
+            <div id="postModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h4>Create New Post</h4><br>
+                    <select id="postTypeDropdown" onchange="postType()">
+                        <option value="Text">Text</option>
+                        <option value="Poll">Poll</option>
+                        <option value="Media">Media</option>
+                        <option value="Event">Event</option>
+                    </select>
 
-    <legend>Filter By:</legend>
-    <select>
-        <option>All Posts</option>
-        <option>Events</option>
-        <option>Media</option>
-    </select>
-    
+                    <!-- TEXT POST-->
+                    <form id="userPostForm" style="display: block;">
+                        <br><label for="postTitle">Title:</label><br>
+                        <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
 
-    <main>
-      <div id="postContainer"></div>
+                        <label for="userPostArea">Content:</label><br>
+                        <textarea name="userPostArea" id="userPostArea" cols="60" rows="8"
+                            class="userPostArea"></textarea><br><br>
 
-    </main>
+                        <h5>Tags:</h5><br>
+                        <form id="searchForm">
+                            <input type="text" name="searchQuery" placeholder="Search tags.." id="searchQuery">
+                            <button type="submit" id="searchButton"><img src="../images/search.png"
+                                    class="nav-icons"></button>
+                        </form>
+                        <div id="tagSearchContainer"></div><br>
 
-</div>
+                        <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+                    </form>
+                    <!-- POLL POST-->
+                    <br>
+                    <form id="pollPost" style="display: none;">
+                        <div class="newPostContainer" style="display: flex;">
 
-    <!-- Page-specific code -->
-    <script src="./posts.js"></script>
-</body>
+                            <div class="media">
+                                <label for="pollMedia">Upload Media (Optional):</label><br><br>
+                                <input type="file" accept="image/*, media/*" name="pollMedia" id="pollMedia"><br><br>
+                            </div>
+                            <hr><br>
+                            <div class="post-content">
+                                <label for="pollQuestion">Poll Question:</label><br>
+                                <input type="text" name="pollQuestion" id="pollQuestion" required
+                                    class="postInput"><br><br>
+
+                                <label for="pollOptions">Poll Options:</label>
+                                <div id="pollOptions">
+                                    <div>
+                                        <input type="text" name="option1" required class="pollInput">
+                                    </div>
+                                </div><br><br>
+                                <button type="button" onclick="addOption()">Add Option</button><br><br>
+                            </div>
+                        </div>
+                        <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+                    </form>
+                    <!-- MEDIA POST-->
+                    <form id="mediaPost" enctype="multipart/form-data" style="display: none;">
+                        <div class="newPostContainer" style="display: flex;">
+                            <div class="media">
+                                <label for="mediaUpload">Upload Media:</label><br><br>
+                                <input type="file" accept="image/*, video/*, audio*/" name="mediaUpload"
+                                    id="mediaUpload" required><br><br>
+                            </div>
+                            <div class="post-content">
+                                <br><label for="postTitle">Title:</label><br>
+                                <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
+
+                                <label for="description">Description:</label><br>
+                                <textarea name="description" id="description" cols="60" rows="3"
+                                    class="userPostArea"></textarea><br><br>
+                            </div>
+                        </div>
+                        <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+                    </form>
+
+                    <!-- EVENT POST-->
+                    <form id="eventPost" enctype="multipart/form-data" style="display: none;">
+                        <label for="eventMedia">Upload Media (Optional):</label><br><br>
+                        <input type="file" accept="image/*, media/*" name="eventMedia" id="eventMedia"><br><br>
+                        <hr><br>
+                        <div class="event-content">
+                            <div class="event-details">
+                                <label for="eventName">Event Name:</label><br>
+                                <input type="text" name="eventName" id="eventName" required class="postInput"><br><br>
+
+                                <label for="eventDate">Date:</label><br>
+                                <input type="date" name="eventDate" id="eventDate" required class="postInput"><br><br>
+
+                                <label for="eventLocation">Location:</label><br>
+                                <input type="text" name="eventLocation" id="eventLocation" required
+                                    class="postInput"><br><br>
+                            </div>
+                            <div class="event-description">
+                                <label for="description">Description:</label><br>
+                                <textarea name="description" id="description" cols="60" rows="8"
+                                    class="userPostArea"></textarea><br><br>
+                            </div>
+                        </div>
+                        <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <header>
+                <h1>FEED</h1>
+            </header>
+
+            <legend>Filter By:</legend>
+            <select>
+                <option>All Posts</option>
+                <option>Events</option>
+                <option>Media</option>
+            </select>
+
+
+            <main>
+                <div id="postContainer"></div>
+
+            </main>
+
+        </div>
+
+        <!-- Page-specific code -->
+        <script src="./posts.js"></script>
+    </body>
 
 </html>

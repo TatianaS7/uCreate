@@ -30,18 +30,18 @@ userPostForm.addEventListener("submit", function(event) {
     tags: document.getElementById("tags")
   };
 
-  sendData(userPost.postTitle.value && userPost.userPostArea.value);
+  sendData(userPost);
 })
 };
 
 //Send Data
 function sendData() {
-  const loginData = getLoginData();
-  console.log(loginData);
+  const response = getresponse();
+  console.log(response);
   const options = {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${loginData.token}`,
+      Authorization: `Bearer ${response.token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ 
@@ -72,12 +72,12 @@ function convertDateTime(apiDateTime) {
 
 
 function postFetch() {
-    const loginData = getLoginData();
+    const response = getresponse();
 
     const options = {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${loginData.token}`,
+            Authorization: `Bearer ${response.token}`,
         },
     };
 
@@ -210,12 +210,12 @@ searchTagButton.addEventListener("submit", function(event) {
 
 
 function searchDatabase(query) {
-  const loginData = getLoginData();
+  const response = getresponse();
 
   const options = {
       method: "GET",
       headers: {
-          Authorization: `Bearer ${loginData.token}`,
+          Authorization: `Bearer ${response.token}`,
       },
   };
 
