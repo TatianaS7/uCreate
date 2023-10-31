@@ -1,7 +1,12 @@
 body {
     background: whitesmoke;
     color: black;
+    overflow: hidden;
 }
+
+/* #main-content {
+    border-style: solid;
+} */
     
 .navbar {
     display: flex;
@@ -11,7 +16,7 @@ body {
  }
  
  .navbar-logo img{
-     max-height: 130px;
+     max-height: 80px;
  }
  
  .page-links li {
@@ -42,18 +47,22 @@ body {
  }
 
 h1 {
-    font-size: 65px;
+    font-size: 50px;
     font-weight: light;
-    margin: 60px;
+    margin: 30px 60px 0px 60px;
+    /* border-style: solid; */
+    text-align: center;
 }
 
 #registrationForm {
-    margin: 60px;
-    max-width: 45%;
+    margin: 40px 60px 60px 60px;
+    max-width: 100%;
     color: black;
+    border-style: solid;
 }
 
 #signUp {
-    width: 25%;
+    max-width: 35%;
     margin-top: 10px;
+    text-align: center;
 }

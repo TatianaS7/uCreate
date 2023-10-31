@@ -34,12 +34,12 @@
         <div class="navbar">
             <div class="navbar-logo">
                 <a href="../posts/index.html"> <img src="../images/ucreate-logo.png" alt="YouCreate"></a>
-                <a href="../explore/index.html" id="explore"><b>Explore</b></a>
+                <a href="../explore/index.html"><img src="../images/explore.png" alt="explore" id="explore"></a>
             </div>
 
             <div class="page-links">
                 <ul>
-                    <li><a href="../profile/index.html"><img src="../images/profile.png" id="profile"></a></li>
+                    <li><a href="../profile/index.html"><img src="../images/profile.png" id="profile" alt="profile"></a></li>
                     <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
                 </ul>
             </div>
@@ -62,48 +62,72 @@
 
                     <!-- TEXT POST-->
                     <form id="userPostForm" style="display: block;">
-                        <br><label for="postTitle">Title:</label><br>
-                        <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
+                        <div class="content-tags-divider">
+                        
+                        <div class="main-content">
+                            <br><label for="postTitle">Title:</label><br>
+                            <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
 
-                        <label for="userPostArea">Content:</label><br>
-                        <textarea name="userPostArea" id="userPostArea" cols="60" rows="8"
-                            class="userPostArea"></textarea><br><br>
+                            <label id="userPostArea" ">Content:</label><br>
+                            <textarea name="userPost" id="userPost" class="content-field" cols="50" rows="6"
+                                class="userPostArea"></textarea><br><br>
+                        </div>
 
-                        <h5>Tags:</h5><br>
-                        <form id="searchForm">
-                            <input type="text" name="searchQuery" placeholder="Search tags.." id="searchQuery">
-                            <button type="submit" id="searchButton"><img src="../images/search.png"
-                                    class="nav-icons"></button>
-                        </form>
-                        <div id="tagSearchContainer"></div><br>
+                        <div class="tag-selector">
+                            <h5>Tags:</h5>
+                                <input type="text" name="searchQuery" placeholder="Search tags.." id="searchQuery">
+                                <button type="submit" id="searchButton"><img src="../images/search.png"
+                                        class="nav-icons"></button>
+                            <div id="tagSearchContainer"></div><br>
+                        </div>
 
-                        <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+                        </div>
+
+                        <div class="submit-buttons">
+                            <button type="submit" id="submitText" class="btn btn-outline-dark">Submit</button>
+                        </div>
+
                     </form>
+
                     <!-- POLL POST-->
                     <br>
                     <form id="pollPost" style="display: none;">
-                        <div class="newPostContainer" style="display: flex;">
+                        <div class="content-tags-divider" style="display: flex;">
 
-                            <div class="media">
+                            <div class="main-content">
+                                <label for="pollQuestion">Poll Question:</label><br>
+                                    <input type="text" name="pollQuestion" id="pollQuestion" required class="postInput"><br><br>
+
+                                    <label for="pollOptions">Poll Options:</label>
+                                    <div id="pollOptions">
+                                        <div>
+                                            <input type="text" name="option1" required class="pollInput">
+                                        </div>
+                                    </div><br>
+
+                                    
+                                    <button type="button" onclick="addOption()">Add Option</button><br><br>                      
+                            
+                                </div>
+
+                            <div class="tag-selector">
+                                <h5>Tags:</h5>
+                                    <input type="text" name="searchQuery" placeholder="Search tags.." id="searchQuery">
+                                    <button type="submit" id="searchButton"><img src="../images/search.png"
+                                            class="nav-icons"></button>
+                                <div id="tagSearchContainer"></div><br>
+
+                                <br><hr><br>                                
+
                                 <label for="pollMedia">Upload Media (Optional):</label><br><br>
                                 <input type="file" accept="image/*, media/*" name="pollMedia" id="pollMedia"><br><br>
                             </div>
-                            <hr><br>
-                            <div class="post-content">
-                                <label for="pollQuestion">Poll Question:</label><br>
-                                <input type="text" name="pollQuestion" id="pollQuestion" required
-                                    class="postInput"><br><br>
-
-                                <label for="pollOptions">Poll Options:</label>
-                                <div id="pollOptions">
-                                    <div>
-                                        <input type="text" name="option1" required class="pollInput">
-                                    </div>
-                                </div><br><br>
-                                <button type="button" onclick="addOption()">Add Option</button><br><br>
+    
                             </div>
-                        </div>
-                        <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+
+                            <div class="submit-buttons">
+                                <button type="submit" id="submitPoll" class="btn btn-outline-dark">Submit</button>
+                            </div>
                     </form>
                     <!-- MEDIA POST-->
                     <form id="mediaPost" enctype="multipart/form-data" style="display: none;">
@@ -114,15 +138,15 @@
                                     id="mediaUpload" required><br><br>
                             </div>
                             <div class="post-content">
-                                <br><label for="postTitle">Title:</label><br>
-                                <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
+                                <br><label for="mediaTitle">Title:</label><br>
+                                <input type="text" name="mediaTitle" id="mediaTitle" required class="postInput"><br><br>
 
-                                <label for="description">Description:</label><br>
-                                <textarea name="description" id="description" cols="60" rows="3"
+                                <label for="media-description">Description:</label><br>
+                                <textarea name="media-description" id="media-description" cols="60" rows="3"
                                     class="userPostArea"></textarea><br><br>
                             </div>
                         </div>
-                        <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+                        <button type="submit" id="submitMedia" class="btn btn-outline-dark">Submit</button>
                     </form>
 
                     <!-- EVENT POST-->
@@ -143,33 +167,41 @@
                                     class="postInput"><br><br>
                             </div>
                             <div class="event-description">
-                                <label for="description">Description:</label><br>
-                                <textarea name="description" id="description" cols="60" rows="8"
+                                <label for="event-description">Description:</label><br>
+                                <textarea name="event-description" id="event-description" cols="60" rows="8"
                                     class="userPostArea"></textarea><br><br>
                             </div>
                         </div>
-                        <button type="submit" id="submit" class="btn btn-outline-dark">Submit</button>
+                        <button type="submit" id="submitEvent" class="btn btn-outline-dark">Submit</button>
                     </form>
+
+                     <div id="resultContainer"></div> <!-- Keeps modal open after submission -->
+
                 </div>
             </div>
         </div>
-
-        <div class="content">
 
             <header>
                 <h1>FEED</h1>
             </header>
 
-            <legend>Filter By:</legend>
-            <select>
-                <option>All Posts</option>
-                <option>Events</option>
-                <option>Media</option>
-            </select>
 
+        <div class="content">
+
+            <div id="filterPosts">
+                <ul>
+                    <li><button type="button" id="filter-all">All</button></li>
+                    <li><button type="button" id="filter-events">Events</button></li>
+                    <li><button type="button" id="filter-media">Media</button></li>
+                    <li><button type="button" id="filter-polls">Polls</button></li>
+                </ul>
+            </div>
 
             <main>
                 <div id="postContainer"></div>
+                <div id="eventsContainer"></div>
+                <div id="mediaContainer"></div>
+                <div id="pollsContainer"></div>
 
             </main>
 

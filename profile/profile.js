@@ -299,7 +299,6 @@ function displaySearchResults(results) {
       results.skills.data.forEach(skills => {
           resultsHTML += `
           <div class="card">
-          
             <div class="card-header">
             <span class="addSkillButton"><button class="btn btn-outline-success">Add</button></span>
             <img src = ${skills.image_path} class = "skill-images">

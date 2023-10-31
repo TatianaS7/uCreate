@@ -3,7 +3,7 @@
 "use strict";
 
 const logoutButton = document.querySelector("#logout");
-const postContainer = document.querySelector('#postContainer');
+const submitText = document.querySelector("#submitText");
 const userPostForm = document.querySelector("#userPostForm");
 const profileContainer = document.querySelector("#profileContainer");
 
@@ -19,50 +19,49 @@ logoutButton.onclick = logout;
 //Form Submit
 
 function formSubmit() {
-userPostForm.addEventListener("submit", function(event) {
-  event.preventDefault();
-  // profileContainer.replaceChildren();
+  submitText.addEventListener('click', function(event) {
+    event.preventDefault();
 
-  const userPost = {
-    postType: postOption.value,
-    title: document.getElementById("postTitle"),
-    content: document.getElementById("userPost"),
-    tags: document.getElementById("tags")
-  };
-
-  sendData(userPost);
-})
+    const userPost = {
+      post_type: postOption.value,
+      title: document.querySelector("#postTitle").value,
+      content: document.querySelector("#userPost").value,
+      tags: document.querySelector("#searchQuery"), //Connect to outputted tags after search
+    };
+     sendData(userPost);
+  })
 };
 
 //Send Data
-function sendData() {
+function sendData(userPost) {
   const response = getresponse();
   console.log(response);
+  
   const options = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${response.token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ 
-      post_type: userPost.postType,
-      title: userPost.title,
-      content: userPost.content,
-      tags: userPost.tags 
-    }),
+    body: JSON.stringify(userPost),
   };
 
   fetch(apiBaseURL + "/api/posts", options)
     .then((response) => response.json())
     .then((data) => {
       postFetch();
-      console.log(data);
-    });
+      console.log(data);    
+    })
+.catch((error) => {
+  console.error(error);
+});
+}
 
-};
+userPostForm.onsubmit = sendData;
 
-userPostForm.onsubmit = formSubmit;
-
+function submitPollPost() {
+  pollPost
+}
 
 function convertDateTime(apiDateTime) {
     const date = new Date(apiDateTime);
@@ -70,10 +69,22 @@ function convertDateTime(apiDateTime) {
     return formattedDateTime;
 }
 
+//FETCH POSTS
+const postContainer = document.querySelector('#postContainer');
+const eventContainer = document.querySelector('#eventsContainer');
+const mediaContainer = document.querySelector('#mediaContainer');
+const pollContainer = document.querySelector('#pollsContainer');
 
+//SELECT POST FILTER
+const showAll = document.querySelector("#filter-all");
+const eventsFilter = document.querySelector("#filter-events");
+const mediaFilter = document.querySelector("#filter-media");
+const pollsFilter = document.querySelector("#filter-polls");
+
+//Show All Posts
 function postFetch() {
+  postContainer.innerHTML = "";
     const response = getresponse();
-
     const options = {
         method: "GET",
         headers: {
@@ -84,7 +95,7 @@ function postFetch() {
     fetch(apiBaseURL + "/api/posts", options)
         .then(response => response.json())
         .then(posts => {
-            posts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            posts.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
 
             console.log(posts);
 
@@ -93,16 +104,16 @@ function postFetch() {
                     const cardHTML = `
                     <div class="card text-center" id="cards" data-post-id="${post.title}">
                     <div class="card-header">
-                    <b>@${post.username}</b>
+                    @${post.username}
                     </div>
                     <div class="card-body">
-                    <p class="card-text"><i>${post.title}</i></p>
+                    <p class="card-text"><b>${post.title}</b></p>
 
                     <p class="card-text">${post.content}</p>
                     </div><br>
                     <div class="card-footer text-muted">
-                    ${convertDateTime(post.created_at)}<br>
-                    <button onmouseover="mouseOverEffect('${post.title}')" onmouseout="mouseOutEffect('${post._id}')" class="like-button" id="${post._id}" onclick="likedOrNah('${post._id}')">❤</button>
+                    ${convertDateTime(post.updated_at)}<br>
+                    <button onmouseover="mouseOverEffect('${post.title}')" onmouseout="mouseOutEffect('${post.post_id}')" class="like-button" id="${post.post_id}" onclick="likedOrNah('${post.post_id}')">❤</button>
                     </div>
                 </div>`;
                     postContainer.innerHTML += cardHTML;
@@ -110,14 +121,14 @@ function postFetch() {
                     const cardHTML = `
                     <div class="card text-center" id="cards" data-post-id="${post.title}">
                     <div class="card-header">
-                    <b>@${post.username}</b>
+                    @${post.username}
                     </div>
                     <div class="card-body">
                     <p class="card-text" >${post.content}</p>
                     </div><br>
                     <div class="card-footer text-muted">
-                    ${convertDateTime(post.created_at)}<br>
-                    <button onmouseover="mouseOverEffect('${post.title}')" onmouseout="mouseOutEffect('${post._id}')" class="like-button liked" id="${post._id}" onclick="likedOrNah('${post._id}')">❤</button>
+                    ${convertDateTime(post.updated_at)}<br>
+                    <button onmouseover="mouseOverEffect('${post.title}')" onmouseout="mouseOutEffect('${post.post_id}')" class="like-button liked" id="${post._id}" onclick="likedOrNah('${post.post_id}')">❤</button>
                     </div>
                     </div>`;
                     postContainer.innerHTML += cardHTML;
@@ -132,9 +143,112 @@ function postFetch() {
     
     window.onload = postFetch;
     
+    showAll.addEventListener('click', function() {
+      location.reload();
+    });
+    
 
-//New Post
+  
+    //Get Event Posts
+    function filterEvents() {
+      eventContainer.innerHTML = "";
 
+      const response = getresponse();
+      const options = {
+          method: "GET",
+          headers: {
+              Authorization: `Bearer ${response.token}`,
+          },
+      };
+  
+      fetch(apiBaseURL + "/api/events", options)
+          .then(response => response.json())
+          .then(events => {
+              events.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  
+              console.log(events);
+  
+              events.forEach(event => {
+                      const eventCardHTML = `
+                      <div class="card text-center" id="cards" data-event-id="${event.event_name}">
+                      <div class="card-header">
+                      @${event.created_by}
+                      </div>
+                      <div class="card-body">
+                      <p class="card-text"><b>${event.event_name}</b></p>
+  
+                      <p class="card-text">${event.event_description}</p>
+                      </div><br>
+                      <div class="card-footer text-muted">
+                        <p class="card-text">Location: ${event.location_text}</p>
+                        <p class="card-text">Date: ${convertDateTime(event.event_date)}</p>
+
+                      <button onmouseover="mouseOverEffect('${event.event_name}')" onmouseout="mouseOutEffect('${event.event_id}')" class="like-button" id="${event.event_id}" onclick="likedOrNah('${event.event_id}')">❤</button>
+                      </div>
+                  </div>`;
+                      eventContainer.innerHTML += eventCardHTML;
+                      postContainer.style.display = "none";
+                      pollContainer.style.display = "none";
+              });
+              
+          })
+          .catch(error => {
+              console.error(error);
+          });
+      }
+      eventsFilter.addEventListener('click', filterEvents);
+  
+      //Get Media Posts
+
+      //Get Poll Posts
+      function filterPolls() {
+        pollContainer.innerHTML = "";
+
+      const response = getresponse();
+      const options = {
+          method: "GET",
+          headers: {
+              Authorization: `Bearer ${response.token}`,
+          },
+      };
+  
+      fetch(apiBaseURL + "/api/polls", options)
+          .then(response => response.json())
+          .then(polls => {
+              polls.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  
+              console.log(polls);
+  
+              polls.forEach(poll => {
+                      const pollsCardHTML = `
+                      <div class="card text-center" id="cards" data-poll-id="${poll.question}">
+                      <div class="card-header">
+                      @${poll.user_id}
+                      </div>
+                      <div class="card-body">
+                      <p class="card-text"><b>${poll.question}</b></p>
+  
+                      <p class="card-text"><button class="btn btn-outline-info">See Responses</button></p>
+                      </div><br>
+                      <div class="card-footer text-muted">
+                      Created: ${convertDateTime(poll.updated_at)}<br>
+                      <button onmouseover="mouseOverEffect('${poll.question}')" onmouseout="mouseOutEffect('${poll.id}')" class="like-button" id="${poll.id}" onclick="likedOrNah('${poll.id}')">❤</button>
+                      </div>
+                  </div>`;
+                      pollContainer.innerHTML += pollsCardHTML;
+                      postContainer.style.display = "none";
+                      eventContainer.style.display = "none";
+              });
+              
+          })
+          .catch(error => {
+              console.error(error);
+          });
+        }
+      pollsFilter.addEventListener('click', filterPolls);
+
+
+//New Post Modal
 // Get references to the button and modal
 const openModalButton = document.getElementById('openModalButton');
 const postModal = document.getElementById('postModal');
@@ -193,13 +307,15 @@ function addOption() {
   pollOptionsDiv.appendChild(newOptionDiv);
 }
 
+//Add Tags to Post
 const searchForm = document.querySelector("#searchForm");
 const searchQueryInput = document.querySelector("#searchQuery");
 const tagSearchContainer = document.querySelector("#tagSearchContainer");
 const searchTagButton = document.querySelector("#searchButton");
 
-searchTagButton.addEventListener("submit", function(event) {
+searchTagButton.addEventListener("click", function(event) {
   event.preventDefault();
+  tagSearchContainer.style.display = "flex"; 
 
   const searchQuery = searchQueryInput.value.trim();
 
@@ -219,7 +335,7 @@ function searchDatabase(query) {
       },
   };
 
-  searchResultsContainer.innerHTML = "";
+  tagSearchContainer.innerHTML = "";
 
   fetch (`${apiBaseURL}/api/search/tags?q=${encodeURIComponent(query)}`, options)
     .then(response => response.json())
@@ -239,12 +355,12 @@ function displaySearchResults(results) {
   if (results.tags.count > 0) {
       results.tags.data.forEach(tags => {
           resultsHTML += `
-          <div class="card">
-            <div class="card-header"></div>
-            <div class="card-body">
-                <p class="card-text">${tags.tag_name}</p>
-              </div>
-          </div><br>`;
+          <div class="checkbox">
+          <label>
+            <input type="checkbox" name="selectedTags" value="${tags.tag_name}">
+            ${tags.tag_name}
+          </label>
+        </div><br>`;      
       });
   } else {
       resultsHTML += "<p>No tags found.</p>";

@@ -32,12 +32,12 @@ searchForm.addEventListener("submit", function (event) {
 
 
 function searchDatabase(query) {
-  const loginData = getLoginData();
+  const response = getresponse();
 
   const options = {
       method: "GET",
       headers: {
-          Authorization: `Bearer ${loginData.token}`,
+          Authorization: `Bearer ${response.token}`,
       },
   };
 
@@ -145,7 +145,10 @@ if (results.polls.count > 0) {
       results.skills.data.forEach(skills => {
           resultsHTML += `
           <div class="card">
-            <div class="card-header">${skills.skill_name}</div>
+            <div class="card-header">
+            <img src = ${skills.image_path} class = "skill-images">
+            <div id = "skill-name"><b>${skills.skill_name}</b></div>
+            </div>
             <div class="card-body">
                 <p class="card-text">${skills.description}</p>
               </div>

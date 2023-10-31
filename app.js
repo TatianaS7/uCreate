@@ -139,7 +139,7 @@ app.post("/auth/login", async (req, res) => {
 });
 
 //Update User Info
-app.put("/api/users/:idUsers/profile", async (req, res) => {
+app.put("/api/users/:id/profile", async (req, res) => {
   const current_user = req.params.idUsers;
   const { username, newPassword, email, bio, avatar } = req.body;
 
@@ -444,6 +444,21 @@ app.put("/api/events/:eventId/RSVP/:userId", async (req, res) => {
     }
 })
 
+//Get All Events
+app.get("/api/events", async (req, res) => {
+  const sql = "SELECT * FROM events";
+  pool.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching events:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      res.json(results);
+    }
+  });
+
+})
+
+
 
 //POLLS
 //Create Poll
@@ -553,6 +568,21 @@ app.delete("/api/polls/:id", async (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
     }
   });
+
+  //Get All Polls
+app.get("/api/polls", async (req, res) => {
+  const sql = "SELECT * FROM polls";
+  pool.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching polls:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      res.json(results);
+    }
+  });
+
+})
+
 
 
 //SEARCH ENDPOINT
@@ -947,9 +977,6 @@ app.delete("/api/:userId/SAVES/:postId", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
-
-
 
 
 // Start the server

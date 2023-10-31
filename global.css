@@ -92,8 +92,9 @@ text-decoration: none;
     background-color: white;
     padding: 20px;
     border-radius: 8px;
-    width: 80%;
-    height: max-content;
+    width: 70%;
+    height: 80%;
+    
   }
   
   .close {
