@@ -300,9 +300,9 @@ function displaySearchResults(results) {
           resultsHTML += `
           <div class="card">
             <div class="card-header">
-            <span class="addSkillButton"><button class="btn btn-outline-success">Add</button></span>
-            <img src = ${skills.image_path} class = "skill-images">
+            <img src = ${skills.image_path} class = "skill-images-profile">
             <div id = "skill-name"><b>${skills.skill_name}</b></div>
+            <div class="addSkillButton"><button class="btn btn-outline-success">Add</button></div>
             </div>
             <div class="card-body">
                 <p class="card-text">${skills.description}</p>

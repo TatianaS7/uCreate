@@ -61,7 +61,7 @@
                     </select>
 
                     <!-- TEXT POST-->
-                    <form id="userPostForm" style="display: block;">
+                    <form id="userPostForm" style="display: block;" method="post" class="new-posts">
                         <div class="content-tags-divider">
                         
                         <div class="main-content">
@@ -75,10 +75,10 @@
 
                         <div class="tag-selector">
                             <h5>Tags:</h5>
-                                <input type="text" name="searchQuery" placeholder="Search tags.." id="searchQuery">
-                                <button type="submit" id="searchButton"><img src="../images/search.png"
+                                <input type="text" name="searchQuery" placeholder="Search tags.." class="searchQuery">
+                                <button type="button" class="searchButton"><img src="../images/search.png"
                                         class="nav-icons"></button>
-                            <div id="tagSearchContainer"></div><br>
+                            <div class="tagSearchContainer"></div><br>
                         </div>
 
                         </div>
@@ -91,7 +91,7 @@
 
                     <!-- POLL POST-->
                     <br>
-                    <form id="pollPost" style="display: none;">
+                    <form id="pollPost" style="display: none;" class="new-posts">
                         <div class="content-tags-divider" style="display: flex;">
 
                             <div class="main-content">
@@ -112,10 +112,10 @@
 
                             <div class="tag-selector">
                                 <h5>Tags:</h5>
-                                    <input type="text" name="searchQuery" placeholder="Search tags.." id="searchQuery">
-                                    <button type="submit" id="searchButton"><img src="../images/search.png"
+                                    <input type="text" name="searchQuery" placeholder="Search tags.." class="searchQuery">
+                                    <button type="button" class="searchButton"><img src="../images/search.png"
                                             class="nav-icons"></button>
-                                <div id="tagSearchContainer"></div><br>
+                                <div class="tagSearchContainer"></div><br>
 
                                 <br><hr><br>                                
 
@@ -130,35 +130,54 @@
                             </div>
                     </form>
                     <!-- MEDIA POST-->
-                    <form id="mediaPost" enctype="multipart/form-data" style="display: none;">
-                        <div class="newPostContainer" style="display: flex;">
-                            <div class="media">
-                                <label for="mediaUpload">Upload Media:</label><br><br>
-                                <input type="file" accept="image/*, video/*, audio*/" name="mediaUpload"
-                                    id="mediaUpload" required><br><br>
-                            </div>
-                            <div class="post-content">
-                                <br><label for="mediaTitle">Title:</label><br>
-                                <input type="text" name="mediaTitle" id="mediaTitle" required class="postInput"><br><br>
+                    <form id="mediaPost" enctype="multipart/form-data" style="display: none;" class="new-posts">
+                        <div class="content-tags-divider" style="display: flex;">
+                            <div class="left-side">
+                                <div class="post-content">
+                                    <br><label for="mediaTitle">Title:</label><br>
+                                    <input type="text" name="mediaTitle" id="mediaTitle" required class="postInput"><br><br>
 
-                                <label for="media-description">Description:</label><br>
-                                <textarea name="media-description" id="media-description" cols="60" rows="3"
-                                    class="userPostArea"></textarea><br><br>
+                                    <label for="media-description">Description:</label><br>
+                                    <textarea name="media-description" id="media-description" cols="50" rows="5"
+                                        class="userPostArea"></textarea><br>
+                                </div><hr><br>
+                                
+                                <div class="media">
+                                    <label for="mediaUpload">Upload Media:</label><br><br>
+                                    <input type="file" accept="image/*, video/*, audio*/" name="mediaUpload"
+                                        id="mediaUpload" required><br><br>
+                                </div>
                             </div>
+
+                            <div class="tag-selector">
+                                <h5>Tags:</h5>
+                                    <input type="text" name="searchQuery" placeholder="Search tags.." class="searchQuery">
+                                    <button type="button" class="searchButton"><img src="../images/search.png"
+                                            class="nav-icons"></button>
+                                <div class="tagSearchContainer"></div><br>
+                            </div>
+
                         </div>
-                        <button type="submit" id="submitMedia" class="btn btn-outline-dark">Submit</button>
+
+                        <div class="submit-buttons">
+                            <button type="submit" id="submitMedia" class="btn btn-outline-dark">Submit</button>
+                        </div>
                     </form>
 
                     <!-- EVENT POST-->
-                    <form id="eventPost" enctype="multipart/form-data" style="display: none;">
-                        <label for="eventMedia">Upload Media (Optional):</label><br><br>
-                        <input type="file" accept="image/*, media/*" name="eventMedia" id="eventMedia"><br><br>
-                        <hr><br>
+                    <form id="eventPost" enctype="multipart/form-data" style="display: none;" class="new-posts">
+                        <div class="content-tags-divider" style="display: block;">
+
                         <div class="event-content">
                             <div class="event-details">
                                 <label for="eventName">Event Name:</label><br>
                                 <input type="text" name="eventName" id="eventName" required class="postInput"><br><br>
 
+                                <label for="event-description">Description:</label><br>
+                                <textarea name="event-description" id="event-description" cols="50" rows="6"
+                                    class="userPostArea"></textarea><br><br>
+                            </div>
+                            <div class="event-description">
                                 <label for="eventDate">Date:</label><br>
                                 <input type="date" name="eventDate" id="eventDate" required class="postInput"><br><br>
 
@@ -166,13 +185,27 @@
                                 <input type="text" name="eventLocation" id="eventLocation" required
                                     class="postInput"><br><br>
                             </div>
-                            <div class="event-description">
-                                <label for="event-description">Description:</label><br>
-                                <textarea name="event-description" id="event-description" cols="60" rows="8"
-                                    class="userPostArea"></textarea><br><br>
+                         </div>
+  
+                        <hr><br>
+
+                        <div class="bottom-content">
+                            <div class="media">
+                                <label for="eventMedia">Upload Media (Optional):</label><br><br>
+                                <input type="file" accept="image/*, media/*" name="eventMedia" id="eventMedia"><br><br>
+                            </div>
+                            <div class="tag-selector">
+                                <h5>Tags:</h5>
+                                    <input type="text" name="searchQuery" placeholder="Search tags.." class="searchQuery">
+                                    <button type="button" class="searchButton"><img src="../images/search.png"
+                                            class="nav-icons"></button>
+                                <div class="tagSearchContainer"></div><br>
                             </div>
                         </div>
-                        <button type="submit" id="submitEvent" class="btn btn-outline-dark">Submit</button>
+                     </div>
+                        <div class="submit-buttons">
+                            <button type="submit" id="submitEvent" class="btn btn-outline-dark">Submit</button>
+                        </div>
                     </form>
 
                      <div id="resultContainer"></div> <!-- Keeps modal open after submission -->
@@ -202,6 +235,13 @@
                 <div id="eventsContainer"></div>
                 <div id="mediaContainer"></div>
                 <div id="pollsContainer"></div>
+
+                    <div class="modal" id="pollModal" >
+                        <div class="modal-content">
+                            <div id="poll-details-content"></div>  
+                            <span class="close" id="close-poll-details">&times;</span>
+                        </div>
+                    </div>
 
             </main>
 

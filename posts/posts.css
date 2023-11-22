@@ -71,7 +71,7 @@ body {
  main {
     display: flex;
     flex-wrap: wrap;
-    max-height: 320px;
+    max-height: 350px;
     overflow-y: auto;
     overflow-x: hidden;
  }
@@ -96,17 +96,38 @@ body {
     gap: 2px;
     max-width: 100%;
     margin-left: 20px;
+    max-height: 100%;
   }
 
  #cards {
     margin: 10px 30px 30px 30px;
-    width: 450px;
-    height: 300px; 
-    overflow: auto;
+    max-width: 100%;
+    /* width: 450px; */
+    /* height: 300px;  */
+    /* overflow: auto; */
 }
 
 .card-body {
     overflow-y: auto;
+}
+
+.poll-options {
+    text-align: center;
+
+}
+
+.poll-options button {
+    background-color: whitesmoke;
+    border-style: none;
+    border-radius: 5px;
+    padding: 7px;
+    margin: 5px;
+    width: 90%;
+}
+
+.postImage img{
+    max-width: 85%;
+    max-height: 100%;
 }
 
 .like-button {
@@ -136,6 +157,12 @@ body {
     margin-left: 63px;
 }
 
+.new-posts {
+    margin-left: 30px;
+    justify-content: center;
+    overflow-y: auto;
+}
+
 #newPost {
     border-radius: 25px;
     width: 45px;
@@ -146,6 +173,11 @@ body {
     padding-bottom: 7px;
     font-weight: 900;
     font-size: larger;
+    overflow-y: scroll;
+}
+
+.newPostContainer {
+    display: block;
 }
 
 #post-controls img {
@@ -184,17 +216,13 @@ select {
     width: max-content;
 }
 
-.event-content {
+.event-content, .bottom-content {
     display: flex;
     justify-content: space-between;
 }
 
 .event-description {
     margin-right: 60px;
-}
-
-.event-details {
-    margin-left: 30px;
 }
 
 
@@ -206,13 +234,13 @@ select {
 .content-tags-divider {
     display: flex;
     justify-content: space-between;
-    max-height: 55%;
-    /* overflow-y: scroll; */
+    max-height: 80%;
+    overflow-y: scroll;
     margin: 20px;
     gap: 3em;
 }
 
-#tagSearchContainer {
+.tagSearchContainer {
     width: fit-content;
     overflow-y: scroll;
     max-height: 70%;
@@ -224,7 +252,39 @@ select {
     gap: 7px;
 }
 
+.tag-selector {
+    margin-left: 20px;
+}
+
 #pollOptions {
     overflow-y: scroll;
-    max-height: 50%;
 }
+
+#pollModal {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#poll-details-content {
+    padding: 50px;
+}
+
+#pollQuestion {
+    text-align: center;
+}
+
+#pollOptions li{
+    list-style: none;
+    margin-top: 25px;
+}
+
+.save-post {
+    background: none;
+    border-style: none;
+}
+
+.save-post img {
+    height: 20px;
+}
+

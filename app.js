@@ -172,10 +172,27 @@ app.put("/api/users/:id/profile", async (req, res) => {
 //Delete User
 app.delete("/api/users/:idUsers/profile", async (req, res) => {
   const idUsers = req.params.idUsers;
+  const { password } = req.body;
 
   try {
-    const deleteUser = "DELETE FROM users WHERE idUsers = ?";
+    //Get hashed password for user
+    const getPassword = "SELECT password FROM users WHERE idUsers = ?";
+    const [userCredentials] = await pool.query(getPassword, [idUsers]);
 
+    if (!userCredentials || userCredentials === 0) {
+      return res.status(400).json({ error: "User not found"});
+    }
+
+    const hashedPassword = userCredentials[0].password;
+
+    //Compare hashed password to confirmation password
+    const matchPassword = await comparePassword(password, hashedPassword);
+
+    if (!matchPassword) {
+      return res.status(401).json({ error: "Incorrect Password" });
+    }
+
+    const deleteUser = "DELETE FROM users WHERE idUsers = ?";
     await pool.query(deleteUser, [idUsers]);
 
     res.status(200).json({ message: "Account deleted!" });
@@ -299,7 +316,14 @@ app.delete("/api/posts/:postId", async (req, res) => {
 
 //Get All Posts 
 app.get("/api/posts", async (req, res) => {
-  const sql = "SELECT username, title, content, media FROM posts";
+  //Join users username and avatar from user table with post data
+  const sql = `
+  SELECT 
+  p.user_id, p.title, p.content, p.media,
+  u.username AS username, u.avatar
+  FROM posts p
+  INNER JOIN users u ON u.idUsers = p.user_id
+  GROUP BY p.user_id, u.username, u.avatar, p.title, p.content, p.media`;  
   pool.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching posts:", err);
@@ -446,7 +470,13 @@ app.put("/api/events/:eventId/RSVP/:userId", async (req, res) => {
 
 //Get All Events
 app.get("/api/events", async (req, res) => {
-  const sql = "SELECT * FROM events";
+  const sql = `
+  SELECT 
+  e.created_by, e.event_name, e.event_date, e.location_text, e.event_description,
+  u.username AS username, u.avatar
+  FROM events e
+  INNER JOIN users u ON u.idUsers = e.created_by
+  GROUP BY e.created_by, u.username, u.avatar, e.event_name, e.event_date, e.location_text, e.event_description`;
   pool.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching events:", err);
@@ -571,7 +601,15 @@ app.delete("/api/polls/:id", async (req, res) => {
 
   //Get All Polls
 app.get("/api/polls", async (req, res) => {
-  const sql = "SELECT * FROM polls";
+  const sql = `
+  SELECT 
+  p.id AS poll_id, p.user_id, p.question,
+  u.username, u.avatar,
+  GROUP_CONCAT(po.poll_option) AS poll_options
+  FROM polls p
+  INNER JOIN users u ON u.idUsers = p.user_id
+  INNER JOIN poll_options po ON p.id = po.poll_id
+  GROUP BY p.id, p.user_id, u.username, u.avatar, p.question`;
   pool.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching polls:", err);
@@ -580,8 +618,108 @@ app.get("/api/polls", async (req, res) => {
       res.json(results);
     }
   });
-
 })
+
+//Vote on Poll
+app.post("/api/polls/:id/:userId", async (req, res) => {
+  // const { user_id } = req.params;
+  const { user_id, poll_id, option_id } = req.body;
+
+  try {
+    const pollVote = "INSERT INTO poll_responses (user_id, poll_id, option_id) VALUES (?, ?, ?)";
+    const [insertedVote] = await pool.query(pollVote, [user_id, poll_id, option_id]);
+  
+  res.status(200).json({ message: "Vote recorded!"});
+  } catch (error) {
+    console.error("Error recording vote:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+})
+
+//Get Poll Responses 
+app.get("/api/polls/:pollId/results", async (req, res) => {
+  const pollId = req.params.pollId;
+
+  // try {
+  //   //Joins poll question, poll options and poll responses to corresponding option name 
+  //   //Counts # of votes for each option within specified poll
+  //     const getResults = 
+  //       `SELECT 
+  //       p.question,
+  //       po.poll_option AS option_name,
+  //       COUNT(*) AS votes 
+  //       FROM poll_responses pr 
+  //       INNER JOIN poll_options po ON pr.option_id = po.id
+  //       INNER JOIN polls p ON p.id = pr.poll_id
+  //       WHERE pr.poll_id = ?
+  //       GROUP BY p.question, po.poll_option`;
+        
+  //     const [pollResponses] = await pool.query(getResults, [pollId]);
+
+  //     const getTotalVotes = "SELECT COUNT(*) AS totalVotes FROM poll_responses WHERE poll_id = ?";
+  //     const [totalVotesResult] = await pool.query(getTotalVotes, [pollId]);
+  //     const totalVotes = totalVotesResult[0].totalVotes;
+
+  //   // Create object that calculates percentages for each option & combines data
+  //   const resultsWithPercentages = pollResponses.map((result) => ({
+  //     question: result.question,
+  //     option_id: result.option_id,
+  //     option_name: result.option_name,
+  //     votes: result.votes,
+  //     percentage: (result.votes / totalVotes) * 100,
+  //   }));
+
+  try {
+    // Retrieve all poll options for the specified poll
+    const getAllOptions = `
+      SELECT DISTINCT poll_option AS option_name
+      FROM poll_options
+      WHERE poll_id = ?`;
+      
+    const [allOptions] = await pool.query(getAllOptions, [pollId]);
+    console.log("All Options:", allOptions);
+
+    // Joins poll question and all poll options, if there are any
+    const getResults = `
+      SELECT 
+        p.question,
+        po.poll_option AS option_name,
+        COUNT(pr.option_id) AS votes 
+      FROM poll_options po
+      LEFT JOIN poll_responses pr ON po.id = pr.option_id
+      INNER JOIN polls p ON p.id = pr.poll_id
+      WHERE pr.poll_id = ?
+      GROUP BY p.question, po.poll_option`;
+
+    const [pollResponses] = await pool.query(getResults, [pollId]);
+    console.log("Poll Responses:", pollResponses);
+
+    const getTotalVotes = "SELECT COUNT(*) AS totalVotes FROM poll_responses WHERE poll_id = ?";
+    const [totalVotesResult] = await pool.query(getTotalVotes, [pollId]);
+    const totalVotes = totalVotesResult[0].totalVotes;
+
+    // Create object that calculates percentages for each option & combines data
+    const resultsWithPercentages = allOptions.map((row) => {
+      const option = row.option_name;
+      const result = pollResponses.find((r) => r.option_name === option);
+
+      return {
+        question: result ? result.question : "", 
+        option_name: option,
+        votes: result ? result.votes : 0,
+        percentage: result ? (result.votes / totalVotes * 100) : 0, //if result is undefined, votes and percentages will be set to 0
+      };
+    });
+
+    console.log("Results with Percentages:", resultsWithPercentages);
+
+    res.json({ resultsWithPercentages, totalVotes });
+  } catch (error) {
+      console.error("Error fetching poll results:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+
+});
 
 
 
@@ -592,7 +730,7 @@ app.get("/api/search", async (req, res) => {
 
   try {
     // Search for users
-    const userSql = `SELECT full_name, username FROM users WHERE username LIKE ? OR full_name LIKE ?`;
+    const userSql = `SELECT * FROM users WHERE username LIKE ? OR full_name LIKE ?`;
     const [users] = await pool.query(userSql, [`%${q}%`, `%${q}%`]);
 
     // Search for posts
@@ -608,7 +746,7 @@ app.get("/api/search", async (req, res) => {
     const [polls] = await pool.query(pollSql, [`%${q}%`]);
 
     // Search for skills
-    const skillSql = `SELECT skill_name, description FROM skills WHERE skill_name LIKE ? OR description LIKE ?`;
+    const skillSql = `SELECT * FROM skills WHERE skill_name LIKE ? OR description LIKE ?`;
     const [skills] = await pool.query(skillSql, [`%${q}%`, `%${q}%`]);
 
     // Combine the results
@@ -677,16 +815,21 @@ app.post("/api/users/:idUsers/skills", async (req, res) => {
   const { skill_name, proficiency_level } = req.body;
 
   try {
-    const checkExistingSkills = "SELECT * FROM skills WHERE skill_name = ?";
-    const [exisitingSkill] = await pool.query(checkExistingSkills, [
-      skill_name,
-    ]);
+    const checkExistingSkills = "SELECT id FROM skills WHERE skill_name = ?";
+    const [existingSkill] = await pool.query(checkExistingSkills, [skill_name]);
 
-    if (!exisitingSkill || exisitingSkill.length === 0) {
+    if (!existingSkill || existingSkill.length === 0) {
       return res.status(400).json({ error: "Skill not found" });
     }
 
-    const skillId = exisitingSkill[0].id;
+    const skillId = existingSkill[0].id;
+
+    const checkUserSkills = "SELECT id FROM user_skills WHERE user_id = ? AND skill_id = ?";
+    const [existingUserSkill] = await pool.query(checkUserSkills, [userId, skillId]);
+
+    if (existingUserSkill && existingUserSkill.length > 0) {
+      return res.status(400).json({ error: "User already has this skill!" });
+    }
 
     const addSkill =
       "INSERT INTO user_skills (user_id, skill_id, proficiency_level) VALUES (?, ?, ?)";
@@ -793,13 +936,9 @@ app.get("/api/search/tags", async (req, res) => {
 
 //INTERACTIVITY
 //Follow User
-// app.post('/api/' , async (req, res) => {
-//     const { username } = req.body;
-
-//     try {
-//         const checkForFollower = 'SELECT * FROM'
-//     }
-// });
+//RSVP Events
+//Like Post/Event/Poll
+//Save Post/Event/Poll
 
 
 //COMMENTS

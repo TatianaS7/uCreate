@@ -22,7 +22,7 @@
 .home {
     height: 32px;
 }
-#settings, #openModalButton, #searchButton {
+#settings, #openModalButton, .searchButton {
     border-width: 0px;
     background: none;
 }
@@ -94,7 +94,6 @@ text-decoration: none;
     border-radius: 8px;
     width: 70%;
     height: 80%;
-    
   }
   
   .close {
@@ -104,4 +103,28 @@ text-decoration: none;
     font-size: 44px;
     cursor: pointer;
   }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+/* USER CARD STYLES */
+.user-thumbnail {
+    border-style: none;
+    background: none;
+}
+.user-thumbnail img{
+    max-height: 35px;
+    max-width: 35px;
+    border-radius: 20px;
+}
+
+/* SKILL IMAGE STYLES */
+.skill-images {
+    margin-right: 20px;
+    max-width: 40px;
+    margin-bottom: 12px;
+ }
+     
   

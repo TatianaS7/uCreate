@@ -19,18 +19,26 @@ logoutButton.onclick = logout;
 //Form Submit
 
 function formSubmit() {
-  submitText.addEventListener('click', function(event) {
+  userPostForm.addEventListener('submit', function(event) {
     event.preventDefault();
 
     const userPost = {
       post_type: postOption.value,
       title: document.querySelector("#postTitle").value,
       content: document.querySelector("#userPost").value,
-      tags: document.querySelector("#searchQuery"), //Connect to outputted tags after search
+      tags: [], //Empty array for selected tags
     };
+
+    const selectedTags = document.querySelectorAll('input[name="selectedTags"]:checked');
+    selectedTags.forEach((tag) => {
+      userPost.tags.push(tag.value);
+    });
+    userPost.tags = selectedTags;
+
      sendData(userPost);
   })
 };
+
 
 //Send Data
 function sendData(userPost) {
@@ -57,7 +65,7 @@ function sendData(userPost) {
 });
 }
 
-userPostForm.onsubmit = sendData;
+userPostForm.onsubmit = formSubmit;
 
 function submitPollPost() {
   pollPost
@@ -100,13 +108,20 @@ function postFetch() {
             console.log(posts);
 
             posts.forEach(post => {
-                if(window.localStorage.getItem(post.post_id) === null) {
+                if(window.localStorage.getItem(post.post_id) === null && post.media) {
                     const cardHTML = `
-                    <div class="card text-center" id="cards" data-post-id="${post.title}">
+                    <div class="card text-center" id="cards" data-post-id="${post.title}" style="max-height: auto;">
                     <div class="card-header">
+                    <button type="button" class="user-thumbnail"><img src="${post.avatar}"></button>
                     @${post.username}
+                    <button type="button" class="save-post"><img src="../images/saves.png"></button>
                     </div>
                     <div class="card-body">
+
+                      <div class="postImage">
+                        <img src="${post.media}" alt="${post.title}">
+                      </div>
+ 
                     <p class="card-text"><b>${post.title}</b></p>
 
                     <p class="card-text">${post.content}</p>
@@ -121,7 +136,9 @@ function postFetch() {
                     const cardHTML = `
                     <div class="card text-center" id="cards" data-post-id="${post.title}">
                     <div class="card-header">
+                    <button type="button" class="user-thumbnail"><img src="${post.avatar}"></button>
                     @${post.username}
+                    <button type="button" class="save-post"><img src="../images/saves.png"></button>
                     </div>
                     <div class="card-body">
                     <p class="card-text" >${post.content}</p>
@@ -172,7 +189,9 @@ function postFetch() {
                       const eventCardHTML = `
                       <div class="card text-center" id="cards" data-event-id="${event.event_name}">
                       <div class="card-header">
-                      @${event.created_by}
+                      <button type="button" class="user-thumbnail"><img src="${event.avatar}"></button>
+                      @${event.username}
+                      <button type="button" class="save-post"><img src="../images/saves.png"></button>
                       </div>
                       <div class="card-body">
                       <p class="card-text"><b>${event.event_name}</b></p>
@@ -183,12 +202,13 @@ function postFetch() {
                         <p class="card-text">Location: ${event.location_text}</p>
                         <p class="card-text">Date: ${convertDateTime(event.event_date)}</p>
 
-                      <button onmouseover="mouseOverEffect('${event.event_name}')" onmouseout="mouseOutEffect('${event.event_id}')" class="like-button" id="${event.event_id}" onclick="likedOrNah('${event.event_id}')">❤</button>
+                      <button class="like-button">❤</button>
                       </div>
                   </div>`;
                       eventContainer.innerHTML += eventCardHTML;
                       postContainer.style.display = "none";
                       pollContainer.style.display = "none";
+                      mediaContainer.style.display = "none";
               });
               
           })
@@ -199,6 +219,58 @@ function postFetch() {
       eventsFilter.addEventListener('click', filterEvents);
   
       //Get Media Posts
+      function showMediaPosts() {
+        mediaContainer.innerHTML = "";
+          const response = getresponse();
+          const options = {
+              method: "GET",
+              headers: {
+                  Authorization: `Bearer ${response.token}`,
+              },
+          };
+      
+          fetch(apiBaseURL + "/api/posts", options)
+              .then(response => response.json())
+              .then(posts => {
+                  posts.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+      
+                  console.log(posts);
+      
+                  posts.forEach(post => {
+                      if(post.media != null) {
+                          const cardHTML = `
+                          <div class="card text-center" id="cards" data-post-id="${post.post_id}" style="max-height: auto;">
+                          <div class="card-header">
+                          <button type="button" class="user-thumbnail"><img src="${post.avatar}"></button>
+                          @${post.username}
+                          <button type="button" class="save-post"><img src="../images/saves.png"></button>
+                          </div>
+                          <div class="card-body">
+      
+                            <div class="postImage">
+                              <img src="${post.media}" alt="${post.title}">
+                            </div>
+       
+                          <p class="card-text"><b>${post.title}</b></p>
+      
+                          <p class="card-text">${post.content}</p>
+                          </div><br>
+                          <div class="card-footer text-muted">
+                          ${convertDateTime(post.updated_at)}<br>
+                          <button class="like-button">❤</button>
+                          </div>
+                      </div>`;
+                          mediaContainer.innerHTML += cardHTML;
+                          postContainer.style.display = "none";
+                      }
+                  }); 
+              })
+              .catch(error => {
+                  console.error(error);
+              });
+          }
+          mediaFilter.addEventListener('click', showMediaPosts);
+      
 
       //Get Poll Posts
       function filterPolls() {
@@ -220,24 +292,38 @@ function postFetch() {
               console.log(polls);
   
               polls.forEach(poll => {
+                const pollOptions = poll.poll_options.split(',');
+
                       const pollsCardHTML = `
-                      <div class="card text-center" id="cards" data-poll-id="${poll.question}">
-                      <div class="card-header">
-                      @${poll.user_id}
-                      </div>
-                      <div class="card-body">
-                      <p class="card-text"><b>${poll.question}</b></p>
-  
-                      <p class="card-text"><button class="btn btn-outline-info">See Responses</button></p>
-                      </div><br>
-                      <div class="card-footer text-muted">
-                      Created: ${convertDateTime(poll.updated_at)}<br>
-                      <button onmouseover="mouseOverEffect('${poll.question}')" onmouseout="mouseOutEffect('${poll.id}')" class="like-button" id="${poll.id}" onclick="likedOrNah('${poll.id}')">❤</button>
-                      </div>
-                  </div>`;
+                      <div class="card text-center" id="cards" data-poll-id="${poll.id}">
+                        <div class="card-header">
+                          <button type="button" class="user-thumbnail"><img src="${poll.avatar}"></button>
+                          @${poll.username}
+                          <button type="button" class="save-post"><img src="../images/saves.png"></button>
+                        </div>
+                        <div class="card-body">
+                          <p class="card-text"><b>${poll.question}</b></p>
+                          <div class="poll-options">
+                            ${pollOptions.map(option => `
+                            <button class="btn btn-warning poll-option" data-poll-id="${poll.poll_id}" data-option="${option}">
+                            ${option}
+                            </button>
+                            `).join('')}
+                          </div>
+                          <br>
+                          <div class="submit-response">
+                            <p class="card-text"><button type="submit" class="btn btn-outline-dark" id="expandPollButton">Submit</button></p>
+                          </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                          Created: ${convertDateTime(poll.updated_at)}<br>
+                          <button class="like-button">❤</button>
+                        </div>
+                      </div>`;
                       pollContainer.innerHTML += pollsCardHTML;
                       postContainer.style.display = "none";
                       eventContainer.style.display = "none";
+                      mediaContainer.style.display = "none";
               });
               
           })
@@ -246,6 +332,71 @@ function postFetch() {
           });
         }
       pollsFilter.addEventListener('click', filterPolls);
+
+
+      //Open Poll Modal
+      const pollModal = document.querySelector("#pollModal")
+      const pollModalContainer = document.querySelector("#poll-details-content");
+      const closeButton = document.querySelector("#close-poll-details");
+
+      function openPollModal(pollId) {
+        pollModal.style.display = "block";
+        pollModalContainer.innerHTML = "";
+        openModalButton.style.display = "none"; 
+
+        const response = getresponse();
+        const options = {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${response.token}`,
+            },
+        };
+    
+        fetch(apiBaseURL + `/api/polls/${pollId}/results`, options)
+            .then(response => response.json())
+            .then(pollData => {
+    
+                console.log(pollData);
+    
+                        const pollDataHTML = `
+                        <h2 id="pollQuestion">${pollData.resultsWithPercentages[0].question}</h2><hr>
+                        <ul id="pollOptions">
+                          ${pollData.resultsWithPercentages.map((result) => {
+
+                             // If result is found, display votes and percentage; otherwise, display 0 votes and 0%
+                            const votes = result ? result.votes : 0;
+                            const percentage = result ? result.percentage : 0;
+
+                            return `<li>${result.option_name}: ${votes} (${percentage}%)</li>`
+                          }).join("")}
+                        </ul>`;                        
+                        
+                        pollModalContainer.innerHTML += pollDataHTML;
+                        postContainer.style.display = "none";
+                        eventContainer.style.display = "none";
+                        mediaContainer.style.display = "none";
+                      
+                      })
+                
+            .catch(error => {
+                console.error(error);
+            });
+          }
+          pollContainer.addEventListener('click', function (event) {
+            const expandButton = event.target.closest('.card-body').querySelector('#expandPollButton');
+            
+            if (expandButton) {
+                const pollId = event.target.closest('[data-poll-id]').dataset.pollId;
+                openPollModal(pollId);
+            }
+        });
+        
+          function closePollModal() {
+            pollModal.style.display = "none";
+          }
+
+          closeButton.addEventListener("click", closePollModal);
+
 
 
 //New Post Modal
@@ -308,24 +459,28 @@ function addOption() {
 }
 
 //Add Tags to Post
-const searchForm = document.querySelector("#searchForm");
-const searchQueryInput = document.querySelector("#searchQuery");
-const tagSearchContainer = document.querySelector("#tagSearchContainer");
-const searchTagButton = document.querySelector("#searchButton");
+document.addEventListener("DOMContentLoaded", function () { //When the HTML doc fully loads,
+  const forms = document.querySelectorAll(".new-posts"); //Select all elements with .new-posts class
 
-searchTagButton.addEventListener("click", function(event) {
-  event.preventDefault();
-  tagSearchContainer.style.display = "flex"; 
+  forms.forEach(form => { //Loop through each form to add event listener for search separately
+    const searchQueryInput = form.querySelector(".searchQuery");
+    const tagSearchContainer = form.querySelector(".tagSearchContainer");
+    const searchTagButton = form.querySelector(".searchButton");
 
-  const searchQuery = searchQueryInput.value.trim();
+    searchTagButton.addEventListener("click", function(event) {
+      event.preventDefault();
+      tagSearchContainer.style.display = "flex"; 
 
-  if (searchQuery !== "") {
-    searchDatabase(searchQuery);
-  }
+      const searchQuery = searchQueryInput.value.trim();
+
+      if (searchQuery !== "") {
+        searchDatabase(searchQuery, tagSearchContainer);
+      }
+    });
+  });
 });
 
-
-function searchDatabase(query) {
+function searchDatabase(query, tagSearchContainer) {
   const response = getresponse();
 
   const options = {
@@ -340,7 +495,7 @@ function searchDatabase(query) {
   fetch (`${apiBaseURL}/api/search/tags?q=${encodeURIComponent(query)}`, options)
     .then(response => response.json())
     .then(searchResults => {
-      displaySearchResults(searchResults);
+      displaySearchResults(searchResults, tagSearchContainer);
 
     })
     .catch(error => {
@@ -348,7 +503,7 @@ function searchDatabase(query) {
     });
 }
 
-function displaySearchResults(results) {
+function displaySearchResults(results, tagSearchContainer) {
   let resultsHTML = "";
 
   // Display Tags
@@ -357,7 +512,7 @@ function displaySearchResults(results) {
           resultsHTML += `
           <div class="checkbox">
           <label>
-            <input type="checkbox" name="selectedTags" value="${tags.tag_name}">
+            <input type="checkbox" value="${tags.tag_name}">
             ${tags.tag_name}
           </label>
         </div><br>`;      

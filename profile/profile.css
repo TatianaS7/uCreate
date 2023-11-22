@@ -49,13 +49,6 @@ hr {
     margin-top: 0;
 }
 
-.userInfo {
-    display: flex;
-    justify-content: space-between;
-    margin-left: 30px;
-    margin-right: 30px;
-}
-
 .username {
     font-size: 18px;
     font-weight: lighter;
@@ -272,6 +265,12 @@ width: 40px;
     margin-left: 10px;
 }
 
+#userDataContainer {
+    display: block;
+    text-align: left;
+    margin-left: 25px;
+}
+
 .edit-button {
     display: flex;
 }
@@ -286,6 +285,8 @@ width: 40px;
 
 .userInfo {
     display: block;
+    /* margin-left: 30px;
+    margin-right: 30px; */
 }
 
 .user-info-fields {
@@ -345,11 +346,11 @@ width: 40px;
     margin-right: 20px;
 }
 
-.skill-images {
-   margin-right: 20px;
-   max-width: 40px;
-   margin-bottom: 12px;
-}
+.skill-images-profile{
+    margin-right: 20px;
+    max-width: 40px;
+    margin-bottom: 12px;
+ }
 
 /* .skill-images {
 box-shadow: 10px 10px 5px darkgrey; } */
@@ -377,6 +378,37 @@ box-shadow: 10px 10px 5px darkgrey; } */
 }
 
 #settings-bio-container {
-    width: 450px;
+    width: 350px;
     height: 100px;
+}
+
+.edit-user-data {
+    display: none;
+}
+
+.edit-user-data input {
+    padding: 4px;
+}
+
+#delete-account-content {
+    margin-top: 30px;
+    align-self: center;
+}
+
+#modal-title {
+text-align: center;
+}
+
+#account-action-buttons {
+    display: flex;
+    gap: 9px;
+}
+
+#action-buttons {
+    text-align: center;
+    padding: 10px;
+}
+
+#confirm-account-deletion {
+    margin: 20px;
 }

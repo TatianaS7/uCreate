@@ -62,7 +62,9 @@ function displaySearchResults(results) {
       results.users.data.forEach(user => {
           resultsHTML += `
           <div class="card">
-            <div class="card-header"><b>@${user.username}</b></div>
+            <div class="card-header">
+            <button type="button" class="user-thumbnail"><img src="${user.avatar}"></button>
+            <b>@${user.username}</b></div>
             <div class="card-body">
               <p class="card-text">${user.full_name}</p>
                 <p class="card-text">${user.bio}</p>
@@ -79,7 +81,9 @@ function displaySearchResults(results) {
       results.posts.data.forEach(post => {
           resultsHTML += `
           <div class="card">
-            <div class="card-header"><b>${post.title}</b></div>
+            <div class="card-header">
+              <b>${post.title}</b>
+              <b>@${post.username}</b></div>
             <div class="card-body">
                 <p class="card-text">${post.content}</p>
             </div>
@@ -95,9 +99,11 @@ function displaySearchResults(results) {
       results.events.data.forEach(event => {
           resultsHTML += `
           <div class="card">
-            <div class="card-header"><b>${event.event_name} | ${event.event_date}</b></div>
+            <div class="card-header">
+              <b>${event.event_name} | ${event.event_date}</b>
+              <b>@${event.username}</b></div>
+            </div>
             <div class="card-body">
-                <p class="card-text">@${event.created_by}</p>
                 <p class="card-text">${event.event_description}</p>
               </div>
             <div class="card-footer text-muted">${event.location_text} | Tags:</div>
@@ -113,7 +119,10 @@ if (results.polls.count > 0) {
     results.polls.data.forEach(poll => {
         resultsHTML += `
         <div class="card">
-          <div class="card-header">${poll.question}</div>
+          <div class="card-header">
+            ${poll.question}
+            <b>@${poll.username}</b>
+          </div>
           <div class="card-body">
               <p class="card-text">Created by: ${poll.user_id}</p></div>
               <div class="card-footer text-muted">Tags:</div>

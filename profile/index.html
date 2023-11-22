@@ -55,7 +55,7 @@
                                 <div class="edit-button">
                                     <br>
                                     <h5>Personal Information</h5>
-                                    <button>Edit</button>
+                                    <button type="button" id="edit-data-button">Edit</button>
                                 </div><br>
 
                                 <div id="settings-container">
@@ -64,15 +64,27 @@
                                         <div class="user-info-fields">
                                             <h6>Full Name: </h6>
                                             <div id="full-name-container" class="user-info-containers"></div>
+                                            <div class="edit-user-data">
+                                                <input type="text" name="full-name" id="edit-full-name">
+                                            </div>
                                         </div>
+
                                         <div class="user-info-fields">
                                             <h6>Username: </h6>
                                             <div id="username-container" class="user-info-containers"></div>
+                                            <div class="edit-user-data">
+                                                <input type="text" name="username" id="edit-username">
+                                            </div>
                                         </div>
+
                                         <div class="user-info-fields">
                                             <h6>Email: </h6>
                                             <div id="email-container" class="user-info-containers"></div>
+                                            <div class="edit-user-data">
+                                                <input type="text" name="email" id="edit-email">
+                                            </div>
                                         </div>
+
                                         <br>
                                         <div class="user-info-fields">
                                             <h6>Password: </h6>
@@ -88,11 +100,18 @@
                                             <div id="settings-bio-container" class="user-info-containers">
                                                 <p></p>
                                             </div>
+                                            <div class="edit-user-data">
+                                                <input type="text" name="bio" id="edit-bio" placeholder="Edit your bio here">
+                                            </div>
                                         </div>
                                         <div class="user-info-fields">
                                             <h6>Location: </h6>
-                                            <div id="location-container" class="user-info-containers"></div>
-                                            <p></p>
+                                            <div id="location-container" class="user-info-containers">
+                                                <p></p>
+                                            </div>
+                                            <div class="edit-user-data">
+                                                <input type="text" name="location" id="edit-location">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -106,9 +125,29 @@
                                 <br>
                                 <h5>Privacy</h5>
 
-                                <!-- <hr><br><button type="button" class="btn btn-outline-success">Save Changes</button> -->
-                                <br><button type="button" class="btn btn-outline-danger">Delete Account</button>
                             </div>
+                            <br>
+                            <div id="account-action-buttons" style="display: flex;">
+                                <br><button type="button" class="btn btn-outline-success" id="save-changes">Save Changes</button>
+                                <br><button type="button" class="btn btn-outline-danger" id="delete-account">Delete Account</button>
+                            </div>
+                            
+                            <div id="delete-account-modal" class="modal">
+                                <div class="modal-content" id="confirm-account-deletion">
+                                    <h3>Please confirm your password</h3>
+                                   
+                                    <div id="delete-account-content">
+                                        <input type="password" id="password-confirmation" name="password-confirmation"><br>
+                                        <br>
+                                        <div id="action-buttons">
+                                            <button type="button" class="btn btn-danger" id="really-delete">Delete Account</button><br><hr>
+                                            <br><p>We'd hate to see you go..</p>
+                                            <button type="button" class="btn btn-outline-success" id="cancel-delete">Cancel</button>
+                                        </div>
+                                    </div>    
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
@@ -143,7 +182,7 @@
                                 <hr><br>
                                 <div class="edit-avatar-buttons">
                                     <button
-                                        type="button"><!--<img src="/images/delete-button.svg" class="edit-profile-img-icons">-->Delete</button><br>
+                                        type="button" id="deleteAvatar">Delete</button><br>
                                     <button
                                         type="button"><!--<img src="/images/camera-icon.png" class="edit-profile-img-icons">-->Add</button>
                                 </div>
@@ -183,7 +222,7 @@
                             <h3 class="skill-header">Add Skills</h3>
                             <form id="searchForm" class="skill-form">
                                 <input type="text" name="searchQuery" placeholder="Adobe Lightroom" id="searchQuery">
-                                <button type="submit" id="searchButton"><img src="../images/search.png"
+                                <button type="submit" class="searchButton"><img src="../images/search.png"
                                         class="nav-icons"></button>
                                 <button type="button" id="showAllSkills" class="btn btn-light">Show All</button>
                             </form>
@@ -211,6 +250,7 @@
 
         <!-- Page-specific code -->
         <script src="./profile.js"></script>
+        <script src="./setup.js"></script>
     </body>
 
 </html>
