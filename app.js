@@ -128,7 +128,9 @@ app.post("/auth/login", async (req, res) => {
       username: user[0].username, 
       email: user[0].email, 
       avatar: user[0].avatar, 
-      bio: user[0].bio
+      bio: user[0].bio,
+      city: user[0].city,
+      state: user[0].state
     } 
 });
 
@@ -165,6 +167,22 @@ app.put("/api/users/:id/profile", async (req, res) => {
     res.status(200).json({ message: "Profile updated!" });
   } catch (error) {
     console.error("Error updating profile:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+//Delete Avatar
+app.delete("/api/users/:id/avatar", async (req, res) => {
+  const current_user = req.params.id;
+
+  try {
+    const deleteAvatar = "UPDATE users SET avatar = NULL WHERE idUsers = ?";
+
+    await pool.query(deleteAvatar, [current_user]);
+
+    res.status(200).json({ message: "Avatar deleted!" });
+  } catch (error) {
+    console.error("Error deleting avatar:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -706,8 +724,8 @@ app.get("/api/polls/:pollId/results", async (req, res) => {
       return {
         question: result ? result.question : "", 
         option_name: option,
-        votes: result ? result.votes : 0,
-        percentage: result ? (result.votes / totalVotes * 100) : 0, //if result is undefined, votes and percentages will be set to 0
+        votes: result ? result.votes : 0, //if result is undefined, votes will be set to 0
+        percentage: result ? (result.votes / totalVotes * 100) : 0, //if result is undefined, percentages will be set to 0
       };
     });
 
@@ -720,7 +738,6 @@ app.get("/api/polls/:pollId/results", async (req, res) => {
   }
 
 });
-
 
 
 //SEARCH ENDPOINT
@@ -778,18 +795,53 @@ app.get("/api/users", (req, res) => {
   });
 });
 
-//Get Specific User Data
+//Get Specific User Data ( by user id )
 app.get("/api/users/:idUsers", async (req, res) => {
   const userId = req.params.idUsers;
 
   try {
-  const getUserData = "SELECT full_name, username, email, bio, avatar, idUsers FROM users WHERE idUsers = ?";
+  const getUserData = `
+  SELECT 
+    u.full_name, u.username, u.email, u.bio, u.city, u.state, u.avatar, u.idUsers, 
+    s.skill_name,
+	usk.proficiency_level
+  FROM users u
+  INNER JOIN user_skills usk ON usk.user_id = u.idUsers
+  INNER JOIN skills s ON s.id = usk.skill_id
+  WHERE idUsers = ?
+  GROUP BY u.full_name, u.username, u.email, u.bio, u.city, u.state, u.avatar, u.idUsers,  s.skill_name, usk.proficiency_level
+`;
   const [userData] = await pool.query(getUserData, [userId]);
 
   res.status(200).json({ userData });
 
   } catch (error) {
       console.error("Error fetching user data:", error);
+      res.status(500).json({ error: "Internal Server Error"});
+  }
+});
+
+//Get Specific User Profile ( by username )
+app.get("/api/users/:username", async (req, res) => {
+  const username = req.params.username;
+
+  try {
+  const getUserProfile = `
+  SELECT 
+    u.full_name, u.username, u.bio, u.city, u.state, u.avatar,
+    s.skill_name,
+    usk.proficiency_level
+  FROM users u
+  INNER JOIN user_skills usk ON usk.user_id = u.idUsers
+  INNER JOIN skills s ON s.id = usk.skill_id
+  WHERE username = ?
+  GROUP BY u.full_name, u.username, u.bio, u.city, u.state, u.avatar, s.skill_name, usk.proficiency_level`;
+  const [userProfile] = await pool.query(getUserProfile, [username]);
+
+  res.status(200).json({ userProfile });
+
+  } catch (error) {
+      console.error("Error fetching user profile:", error);
       res.status(500).json({ error: "Internal Server Error"});
   }
 });
@@ -867,7 +919,9 @@ app.get("/api/search/skills", async (req, res) => {
 
 //Request Skills
 app.post("/api/request/skills", async (req, res) => {
+  
   const { skill_name } = req.body;
+  console.log("Received request body:", req.body);
 
   try {
     const checkExistingRequests =
@@ -892,7 +946,7 @@ app.post("/api/request/skills", async (req, res) => {
     const skillRequest = "INSERT INTO skill_request (skill_name) VALUES (?)";
     await pool.query(skillRequest, [skill_name]);
 
-    res.status(200).json({ message: "Your request has been submitted!" });
+    res.status(200).json({ message: `Your request for "${skill_name}" has been submitted, and will be reviewed shortly!` });
   } catch (error) {
     console.error("Error submitting request:", error);
     res.status(500).json({ error: "Internal Server Error" });

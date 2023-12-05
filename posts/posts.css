@@ -208,10 +208,6 @@ body {
     padding: 20px;
 }
 
-.close:hover {
-    color: rgb(153, 9, 9);
-}
-
 select {
     width: max-content;
 }
@@ -286,5 +282,11 @@ select {
 
 .save-post img {
     height: 20px;
+}
+
+/* USER PROFILE MODAL */
+.user-profile {
+    background: none;
+    border-style: none;
 }
 

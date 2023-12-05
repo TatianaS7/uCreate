@@ -174,17 +174,27 @@
                             <div class="modal-content">
                                 <span class="close" id="close-avatar">&times;</span>
                                 <div id="userAvatarContainer"></div>
+                                <div id="avatarSelector" style="display: none;">
+                                    <label for="mediaUpload">Select New Image</label><br><br>
+                                    <input type="file" accept="image/*, video/*, audio*/" name="mediaUpload"
+                                            id="avatarUpload"><br><br>    
+                                            <p>Or</p>
+                                            <label for="urlUpload">Link:</label><br>
+                                            <input type="url" name="url" id="urlUpload">
+                                </div>
 
                                 <div id="defaultAvatar">
                                     <img src="../images/profile.png" alt="profile image" id="edit-profile-img">
                                 </div>
 
                                 <hr><br>
-                                <div class="edit-avatar-buttons">
-                                    <button
-                                        type="button" id="deleteAvatar">Delete</button><br>
-                                    <button
-                                        type="button"><!--<img src="/images/camera-icon.png" class="edit-profile-img-icons">-->Add</button>
+                                <div class="edit-avatar-buttons" id="edit-avatar-buttons">
+                                    <button type="button" id="deleteAvatar" class="btn btn-outline-danger">Delete</button><br>
+                                    <button type="button" id="addAvatar">Add</button>
+                                </div>
+                                <div id="save-avatar-div" style="display: none;">
+                                    <button type="button" id="saveUpdate">Update</button><br>
+                                    <button type="button" id="cancel">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -228,13 +238,27 @@
                             </form>
 
                             <div id="searchResults"></div>
+                            
+                            <div id="request-skill-div" style="display: none;">
+                                <button id="requestSkill" type="button" class="btn btn-outline-dark">Request Skill</button>
+
+                                <div id="request-modal" class="modal" style="display: none;">
+                                    <div class="modal-content">
+                                        <span class="close" id="close-request">&times;</span>
+                                        <h3 class="request-header">Request Skill</h3>
+                                        <form id="requestForm" class="request-form">
+                                            <input type="text" name="skill-request" placeholder="MongoDB" id="your-request">
+                                            <button type="submit" class="btn btn-success" id="submit-skill-request">Submit</button>
+                                        </form>
+
+                                        <div id="received-submission"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
-
             <br>
             <hr><br>
 

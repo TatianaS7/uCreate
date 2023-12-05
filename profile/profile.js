@@ -10,10 +10,20 @@ const usernameContainer = document.querySelector("#username-container");
 const emailContainer = document.querySelector("#email-container");
 const passwordContainer = document.querySelector("#password-container");
 const fullNameContainer = document.querySelector("#full-name-container");
+const locationContainer = document.querySelector("#location-container");
+
 const userAvatarContainer = document.querySelector('#userAvatarContainer');
 const userProfileImgContainer = document.querySelector('#userProfileImg');
 const defaultAvatar = document.querySelector('#defaultAvatar');
 const defaultProfileImg = document.querySelector('#defaultProfileImg');
+const editAvatarBtnDiv = document.querySelector('#edit-avatar-buttons');
+const saveAvatarBtnDiv = document.querySelector('#save-avatar-div');
+const saveAvatarButton = document.querySelector('#saveUpdate');
+const cancelNewAvatarButton = document.querySelector('#cancel');
+const deleteAvatarButton = document.querySelector('#deleteAvatar');
+const addAvatarButton = document.querySelector('#addAvatar');
+const avatarSelector = document.querySelector('#avatarSelector');
+const avatarUpload = document.querySelector('#avatarUpload');
 const settingsBioContainer = document.querySelector('#settings-bio-container');
 
 
@@ -103,6 +113,9 @@ function displayresponse() {
         const username = `${userData.username}`;
         usernameContainer.textContent = username;
 
+        const location = `${userData.city}, ${userData.state}`;
+        locationContainer.textContent = location;
+
         const avatar = `<img src = "${userData.avatar}">`;
         if (userData.avatar) {
           defaultAvatar.style.display = "none";
@@ -112,8 +125,8 @@ function displayresponse() {
           userProfileImgContainer.innerHTML = avatar;
   
         } else {
-          defaultAvatar.style.display = "block";
-          defaultProfileImg.style.display = "block";
+          defaultAvatar.style.display = "flex";
+          defaultProfileImg.style.display = "flex";
           
           userAvatarContainer.style.display = "none";
           userProfileImgContainer.style.display = "none";
@@ -122,22 +135,45 @@ function displayresponse() {
       .catch(error => {
         console.error("Error:", error);
       });
-    }
+    };
+
+//Toggle Avatar Edit Buttons
+function openNewAvatarSelector() {
+  userAvatarContainer.style.display = "none";
+  defaultAvatar.style.display = "none";
+  defaultProfileImg.style.display = "none";
+  avatarSelector.style.display = "block";
+  editAvatarBtnDiv.style.display = "none";
+  saveAvatarBtnDiv.style.display = "flex";
+}
+addAvatarButton.addEventListener('click', openNewAvatarSelector);
+
+function closeNewAvatarSelector() {
+  userAvatarContainer.style.display = "flex";
+  defaultAvatar.style.display = "flex";
+  avatarSelector.style.display = "none";
+  editAvatarBtnDiv.style.display = 'flex';
+  saveAvatarBtnDiv.style.display = 'none';
+}
+cancelNewAvatarButton.addEventListener('click', closeNewAvatarSelector);
+
+let deleteAvatarButtonClicked = false;
 
 //Update User Info
 function updateUserInfo() {
   const response = getresponse();
   const userId = response.user.idUsers;
 
+console.log(response);
+
   const newUsername = usernameContainer.value;
   const newPassword = passwordContainer.value;
   const newEmail = emailContainer.value;
   const newBio = bioTextarea.value;
-  const newAvatar = userImg;
+  const newAvatar =  avatarUpload || null;
 
   const updates = { username: newUsername, password: newPassword, email: newEmail, bio: newBio, avatar: newAvatar };
   
-
   const options = {
     method: "PUT",
     headers: {
@@ -147,17 +183,45 @@ function updateUserInfo() {
     body: JSON.stringify( { userId, updates }),
   };
 
-  fetch(apiBaseURL + `/api/users/${userId}/profile`, options)
+  if (deleteAvatarButtonClicked) {
+    options.method = "DELETE";
+  
+
+  fetch(apiBaseURL + `/api/users/${userId}/avatar`, options)
     .then(response => response.json())
     .then(data => {
       displayresponse();
-
       console.log(data);
     })
     .catch(error => {
       console.error(error);
     });
+
+deleteAvatarButtonClicked = false; // Reset the flag
+  
+} else {
+    // If not deleting the avatar, send a PUT request
+    fetch(apiBaseURL + `/api/users/${userId}/profile`, options)
+      .then(response => response.json())
+      .then(data => {
+        displayresponse();
+        console.log(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
 }
+
+saveAvatarButton.addEventListener('click', function () {
+  deleteAvatarButtonClicked = false;
+  updateUserInfo();
+})
+
+deleteAvatarButton.addEventListener('click', function () {
+  deleteAvatarButtonClicked = true;
+  updateUserInfo();
+});
 
 function saveBio() {
   if (!bioDisplay || !bioTextarea || !saveBioButton) {
@@ -240,12 +304,20 @@ closeModalButton.addEventListener('click', closeModal);
 const openSkillsModalButton = document.getElementById('openSkillsModalButton');
 const skillsModal = document.getElementById('skillsModal');
 const closeSkillsModalButton = document.getElementById('close-skills');
+
 const searchModal = document.getElementById('searchModal');
 const searchForm = document.querySelector("#searchForm");
 const searchQueryInput = document.querySelector("#searchQuery");
 const searchResultsContainer = document.querySelector("#searchResults");
+
 const showAllSkillsButton = document.querySelector("#showAllSkills");
 const skillDisplayContainer = document.querySelector("#skillsDisplay");
+
+const requestForm = document.querySelector('#requestForm');
+const skillRequestDiv = document.querySelector("#request-skill-div");
+const skillRequestButton = document.querySelector("#requestSkill");
+const receivedSubmission = document.querySelector("#received-submission");
+
 
 
 // Function to open the modal
@@ -268,7 +340,7 @@ searchForm.addEventListener("submit", function (event) {
   }
 });
 
-//Search for skills
+//Search for Skills
 function searchDatabase(query) {
   const response = getresponse();
 
@@ -291,11 +363,12 @@ function searchDatabase(query) {
     });
 }
 
+//Display Skill Results
 function displaySearchResults(results) {
   let resultsHTML = "";
 
   // Display Skills
-  if (results.skills.count > 0) {
+  if (results.skills) {
       results.skills.data.forEach(skills => {
           resultsHTML += `
           <div class="card">
@@ -310,11 +383,73 @@ function displaySearchResults(results) {
           </div><br>`;
       });
   } else {
-      resultsHTML += "<p>No skills found.</p>";
+      resultsHTML += `
+      <p>No skills found.</p>`;
+      
+      skillRequestDiv.style.display = "block";
   }
 
   // Set the HTML content of the searchResultsContainer
   searchResultsContainer.innerHTML = resultsHTML;
+}
+
+
+//SKILL REQUEST CODE
+
+//Open Modal
+const skillReqModal = document.querySelector('#request-modal');
+
+function openRequestModal() {
+  skillReqModal.style.display = "block";
+}
+skillRequestButton.addEventListener('click', openRequestModal);
+
+//Close Modal
+const closeRequestModalButton = document.querySelector('#close-request');
+
+function closeRequestModal() {
+  skillReqModal.style.display = "none";
+}
+closeRequestModalButton.addEventListener('click', closeRequestModal);
+
+//Submit Request
+function submitRequest() {
+  const response = getresponse();
+
+  const skill_name = document.getElementById('your-request').value;
+  
+  const options = {
+      method: "POST",
+      headers: {
+          Authorization: `Bearer ${response.token}`,
+          'Content-Type': 'application/json', //Specify that JSON data is being sent
+      },
+      body: JSON.stringify({ skill_name }),
+  };
+
+  fetch(apiBaseURL + "/api/request/skills", options)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(skillRequest => {
+      if (skillRequest.error && skillRequest.status === 400) {
+        receivedSubmission.innerHTML = `<p>${skillRequest.error}</p>`;
+      } else {
+        receivedSubmission.innerHTML = `<p>${skillRequest.message}</p>`;
+      }    
+    })
+    .catch(error => {
+      console.error(error);
+      receivedSubmission.innerHTML = "<p>Error submitting skill request</p>";
+    });
+}
+
+requestForm.onsubmit = function (event) {
+  event.preventDefault();
+  submitRequest();
 }
 
 //Show All Skills
@@ -364,9 +499,10 @@ function addSkillToProfile(skillId) {
   const response = getresponse();
 
   const options = {
-      method: "GET",
+      method: "POST",
       headers: {
           Authorization: `Bearer ${response.token}`,
+          'Content-Type': 'application/json', //Specify that JSON data is being sent
       },
       body: JSON.stringify({ skillId }),
   };

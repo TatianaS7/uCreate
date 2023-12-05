@@ -16,6 +16,9 @@ const eventPost = document.querySelector("#eventPost");
 
 logoutButton.onclick = logout;
 
+
+//NEW POSTS
+
 //Form Submit
 
 function formSubmit() {
@@ -113,7 +116,7 @@ function postFetch() {
                     <div class="card text-center" id="cards" data-post-id="${post.title}" style="max-height: auto;">
                     <div class="card-header">
                     <button type="button" class="user-thumbnail"><img src="${post.avatar}"></button>
-                    @${post.username}
+                    <button type="button" class="user-profile" data-username="${post.username}"> @${post.username} </button>
                     <button type="button" class="save-post"><img src="../images/saves.png"></button>
                     </div>
                     <div class="card-body">
@@ -137,7 +140,7 @@ function postFetch() {
                     <div class="card text-center" id="cards" data-post-id="${post.title}">
                     <div class="card-header">
                     <button type="button" class="user-thumbnail"><img src="${post.avatar}"></button>
-                    @${post.username}
+                    <button type="button" class="user-profile" data-username="${post.username}"> @${post.username} </button>
                     <button type="button" class="save-post"><img src="../images/saves.png"></button>
                     </div>
                     <div class="card-body">
@@ -190,7 +193,7 @@ function postFetch() {
                       <div class="card text-center" id="cards" data-event-id="${event.event_name}">
                       <div class="card-header">
                       <button type="button" class="user-thumbnail"><img src="${event.avatar}"></button>
-                      @${event.username}
+                      <button type="button" class="user-profile" data-username="${event.username}"> @${event.username} </button>
                       <button type="button" class="save-post"><img src="../images/saves.png"></button>
                       </div>
                       <div class="card-body">
@@ -242,7 +245,7 @@ function postFetch() {
                           <div class="card text-center" id="cards" data-post-id="${post.post_id}" style="max-height: auto;">
                           <div class="card-header">
                           <button type="button" class="user-thumbnail"><img src="${post.avatar}"></button>
-                          @${post.username}
+                          <button type="button" class="user-profile" data-username="${post.username}"> @${post.username} </button>
                           <button type="button" class="save-post"><img src="../images/saves.png"></button>
                           </div>
                           <div class="card-body">
@@ -294,11 +297,14 @@ function postFetch() {
               polls.forEach(poll => {
                 const pollOptions = poll.poll_options.split(',');
 
+                // Check if poll.id is present before assigning it
+                const pollIdAttribute = poll.id ? `data-poll-id="${poll.id}"` : '';
+
                       const pollsCardHTML = `
-                      <div class="card text-center" id="cards" data-poll-id="${poll.id}">
+                      <div class="card text-center" id="cards" ${pollIdAttribute}">
                         <div class="card-header">
                           <button type="button" class="user-thumbnail"><img src="${poll.avatar}"></button>
-                          @${poll.username}
+                          <button type="button" class="user-profile" data-username="${poll.username}"> @${poll.username} </button>
                           <button type="button" class="save-post"><img src="../images/saves.png"></button>
                         </div>
                         <div class="card-body">
@@ -524,4 +530,106 @@ function displaySearchResults(results, tagSearchContainer) {
   // Set the HTML content of the tagSearchContainer
   tagSearchContainer.innerHTML = resultsHTML;
 }
+
+//User Profile Modals
+const userProfileModal = document.querySelector("#user-profile-modal")
+const userProfileContainer = document.querySelector("#user-profile-content");
+const closeProfileButton = document.querySelector("#close-user-profile");
+
+const bioDisplay = document.querySelector("#bioDisplay");
+const bioTextarea = document.querySelector("#biotext");
+const usernameContainer = document.querySelector("#username-container");
+const emailContainer = document.querySelector("#email-container");
+const passwordContainer = document.querySelector("#password-container");
+const fullNameContainer = document.querySelector("#full-name-container");
+const locationContainer = document.querySelector("#location-container");
+
+const userAvatarContainer = document.querySelector('#userAvatarContainer');
+const userProfileImgContainer = document.querySelector('#userProfileImg');
+const defaultAvatar = document.querySelector('#defaultAvatar');
+const defaultProfileImg = document.querySelector('#defaultProfileImg');
+
+//Open Modal
+function openModal(username) {
+userProfileModal.style.display = "block";
+openModalButton.style.display = "none";
+
+const response = getresponse();
+const options = {
+  method: "GET",
+  headers: {
+    Authorization: `Bearer ${response.token}`,
+  },
+};      
+
+fetch(apiBaseURL + `/api/users/${username}`, options)
+    .then(response => response.json())
+    .then(userInfo => {
+
+        console.log(userInfo);
+              
+              const data = `
+              <h4> <b>${userInfo.full_name}</b></h4>
+              <div class = "username">@${userInfo.username}</div>`;
+              dataContainer.innerHTML = data;
+      
+              const bio = `${userInfo.bio}`;
+              bioDisplay.textContent = bio || "No bio yet!";
+              settingsBioContainer.textContent = bio || "No bio yet!"
+      
+              const fullName = `${userInfo.full_name}`;
+              fullNameContainer.textContent = fullName || "Working on it.";
+      
+              const email = `${userInfo.email}`;
+              emailContainer.textContent = email;
+      
+              const username = `${userInfo.username}`;
+              usernameContainer.textContent = username;
+
+              const location = `${userInfo.city}, ${userInfo.state}`;
+              locationContainer.textContent = location;
+      
+              const avatar = `<img src = "${userInfo.avatar}">`;
+              if (userInfo.avatar) {
+                defaultAvatar.style.display = "none";
+                defaultProfileImg.style.display = "none";
+      
+                userAvatarContainer.innerHTML = avatar;
+                userProfileImgContainer.innerHTML = avatar;
+        
+              } else {
+                defaultAvatar.style.display = "flex";
+                defaultProfileImg.style.display = "flex";
+                
+                userAvatarContainer.style.display = "none";
+                userProfileImgContainer.style.display = "none";
+              }
+            })
+            .catch(error => {
+              console.error("Error:", error);
+            });
+          };
+      
+// Event delegation on the parent element
+postContainer.addEventListener('click', function(event) {
+  const target = event.target;
+
+  // Check if the clicked element is a button with the class 'user-profile'
+  if (target.classList.contains('user-profile')) {
+    // Access the data-username attribute to get the username
+    const username = target.getAttribute('data-username');
+    console.log(`View profile clicked for user: ${username}`);
+
+    openModal(username);
+  }
+});
+
+// Close Modal
+function closeModal() {
+  userProfileModal.style.display = 'none';
+  openModalButton.style.display = "block";
+}
+
+// Event listeners
+closeProfileButton.addEventListener('click', closeModal);
 
