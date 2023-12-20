@@ -1,16 +1,6 @@
 "use strict";
 
 const logoutButton = document.querySelector("#logout");
-const profileContainer = document.querySelector("#profileContainer");
-const dataContainer = document.querySelector("#userDataContainer");
-const bioDisplay = document.querySelector("#bioDisplay");
-const saveBioButton = document.querySelector("#saveBio");
-const bioTextarea = document.querySelector("#biotext");
-const usernameContainer = document.querySelector("#username-container");
-const emailContainer = document.querySelector("#email-container");
-const passwordContainer = document.querySelector("#password-container");
-const fullNameContainer = document.querySelector("#full-name-container");
-const locationContainer = document.querySelector("#location-container");
 
 const userAvatarContainer = document.querySelector('#userAvatarContainer');
 const userProfileImgContainer = document.querySelector('#userProfileImg');
@@ -28,7 +18,6 @@ const settingsBioContainer = document.querySelector('#settings-bio-container');
 
 
 logoutButton.onclick = logout;
-saveBioButton.onclick = saveBio;
 
 function convertDateTime(apiDateTime) {
   const date = new Date(apiDateTime);
@@ -37,6 +26,8 @@ function convertDateTime(apiDateTime) {
 }
 
 //Display Your Posts
+const profileContainer = document.querySelector("#profileContainer");
+
 function profileFetch() {
   const response = getresponse();
   const options = {
@@ -46,37 +37,98 @@ function profileFetch() {
     },
   };
 
-  fetch(apiBaseURL + "/api/posts?username=" + response.username, options)
+  fetch(apiBaseURL + `/api/posts/${response.user.username}`, options)
     .then((response) => response.json())
     .then((userProfiles) => {
-      userProfiles.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-      let postHTML = "";
+      console.log(userProfiles);
 
-      userProfiles.forEach((userProfile) => {
-        postHTML += `
-        <div class="card text-center" id="cards" data-post-id="${userProfile._id}">
+      profileContainer.innerHTML = "";
+
+      userProfiles.posts.forEach(profile => {
+        const postHTML = `
+        <div class="card text-center" id="cards" data-post-id="${profile.post_id}">
           <div class="card-header">
-          <span class="deleteButton"><button class="btn btn-outline-danger" id="${userProfile._id}" onclick="deletePost('${userProfile._id}')">Χ</button></span>
-              <b>@${userProfile.username}</b>
+            <div class="left-header">
+              <div class="user-thumbnail"><img src="${profile.avatar}"></div>
+              <div class="username"><b>@${profile.username}</b></div>
+            </div>  
+            <span class="deleteButton"><button class="btn btn-outline-danger" id="${profile.post_id}" onclick="deletePost('${profile.post_id}')"><img src="../images/trash.jpg" class="nav-icons"></button></span>
           </div>
           <div class="card-body">
-              <p class="card-text">${userProfile.content}</p>
+              <p class="card-text">${profile.content}</p>
           </div><br>
           <div class="card-footer text-muted">
-              ${convertDateTime(userProfile.created_at)}
+              ${profile.created_at}
           </div>
         </div>`;
+
+        profileContainer.innerHTML += postHTML;
+
       });
-    profileContainer.innerHTML = postHTML;
     })
       .catch((error) => {
         console.error(error);
       });
-}
+};
+
+//Display Your Events
+const eventsContainer = document.querySelector("#eventContainer");
+
+function fetchEvents() {
+  const response = getresponse();
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${response.token}`,
+    },
+  };
+
+  fetch(apiBaseURL + `/api/events/${response.user.username}`, options)
+    .then((response) => response.json())
+    .then((userProfiles) => {
+
+      console.log(userProfiles);
+
+      profileContainer.innerHTML = "";
+
+      userProfiles.posts.forEach(profile => {
+        const postHTML = `
+        <div class="card text-center" id="cards" data-post-id="${profile.post_id}">
+          <div class="card-header">
+            <div class="left-header">
+              <div class="user-thumbnail"><img src="${profile.avatar}"></div>
+              <div class="username"><b>@${profile.username}</b></div>
+            </div>  
+            <span class="deleteButton"><button class="btn btn-outline-danger" id="${profile.post_id}" onclick="deletePost('${profile.post_id}')">Χ</button></span>
+          </div>
+          <div class="card-body">
+              <p class="card-text">${profile.content}</p>
+          </div><br>
+          <div class="card-footer text-muted">
+              ${profile.created_at}
+          </div>
+        </div>`;
+
+        profileContainer.innerHTML += postHTML;
+
+      });
+    })
+      .catch((error) => {
+        console.error(error);
+      });
+};
 
 //Display User Info
-function displayresponse() {
+const dataContainer = document.querySelector("#userDataContainer");
+const bioDisplay = document.querySelector("#bioDisplay");
+const usernameContainer = document.querySelector("#username-container");
+const emailContainer = document.querySelector("#email-container");
+const passwordContainer = document.querySelector("#password-container");
+const fullNameContainer = document.querySelector("#full-name-container");
+const locationContainer = document.querySelector("#location-container");
+
+function displayUserInfo() {
 
   const response = getresponse();
 
@@ -97,7 +149,8 @@ function displayresponse() {
         
         const data = `
         <h4> <b>${userData.full_name}</b></h4>
-        <div class = "username">@${userData.username}</div>`;
+        <div class = "username">@${userData.username}</div><br>
+        <div class="location"><img class="nav-icons" src="../images/location-icon.png">${userData.city}, ${userData.state}</div>`;
         dataContainer.innerHTML = data;
 
         const bio = `${userData.bio}`;
@@ -223,24 +276,12 @@ deleteAvatarButton.addEventListener('click', function () {
   updateUserInfo();
 });
 
-function saveBio() {
-  if (!bioDisplay || !bioTextarea || !saveBioButton) {
-    return; // Elements not found, exit the function
-  }
-
-  bioDisplay.textContent = bioTextarea.value;
-  bioDisplay.style.display = "block";
-  bioTextarea.style.display = "none";
-  saveBioButton.style.display = "none";
-  updateBio();
-}
-
 
 window.onload = main;
 
 function main() {
   profileFetch();
-  displayresponse();
+  displayUserInfo();
 }
 
 //DELETE POSTS

@@ -69,6 +69,9 @@ function displaySearchResults(results) {
               <p class="card-text">${user.full_name}</p>
                 <p class="card-text">${user.bio}</p>
             </div>
+            <div class="card-footer text-muted">
+              ${user.city}, ${user.state}
+            </div>
           </div><br>`;
       });
   } else {
@@ -101,12 +104,12 @@ function displaySearchResults(results) {
           <div class="card">
             <div class="card-header">
               <b>${event.event_name} | ${event.event_date}</b>
-              <b>@${event.username}</b></div>
+              <b>@${event.username}</b>
             </div>
             <div class="card-body">
                 <p class="card-text">${event.event_description}</p>
               </div>
-            <div class="card-footer text-muted">${event.location_text} | Tags:</div>
+            <div class="card-footer text-muted">${event.city}, ${event.state} | Tags:</div>
           </div><br>`;
       });
   } else {

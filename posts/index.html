@@ -39,6 +39,14 @@
 
             <div class="page-links">
                 <ul>
+                    <li><button id="notifications" type="button"><img src="../images/notifications.png" class="nav-icons"></button></li>
+                    <div class="modal" id="notis-modal">
+                        <div class="modal-content" id="noti-modal-content">
+                            <span class="close" id="close-noti-modal">&times;</span>
+                            <h3>Notifications</h3>
+                        </div>
+                    </div>
+
                     <li><a href="../profile/index.html"><img src="../images/profile.png" id="profile" alt="profile"></a></li>
                     <li><button id="logout" class="btn btn-outline-dark">Logout</button></li>
                 </ul>
@@ -51,7 +59,7 @@
             <button type="button" id="openModalButton">+</button>
             <div id="postModal" class="modal">
                 <div class="modal-content">
-                    <span class="close">&times;</span>
+                    <span class="close" id="close-posts-modal">&times;</span>
                     <h4>Create New Post</h4><br>
                     <select id="postTypeDropdown" onchange="postType()">
                         <option value="Text">Text</option>
@@ -65,7 +73,7 @@
                         <div class="content-tags-divider">
                         
                         <div class="main-content">
-                            <br><label for="postTitle">Title:</label><br>
+                            <label for="postTitle">Title:</label><br>
                             <input type="text" name="postTitle" id="postTitle" required class="postInput"><br><br>
 
                             <label id="userPostArea" ">Content:</label><br>
@@ -90,7 +98,6 @@
                     </form>
 
                     <!-- POLL POST-->
-                    <br>
                     <form id="pollPost" style="display: none;" class="new-posts">
                         <div class="content-tags-divider" style="display: flex;">
 
@@ -134,7 +141,7 @@
                         <div class="content-tags-divider" style="display: flex;">
                             <div class="left-side">
                                 <div class="post-content">
-                                    <br><label for="mediaTitle">Title:</label><br>
+                                    <label for="mediaTitle">Title:</label><br>
                                     <input type="text" name="mediaTitle" id="mediaTitle" required class="postInput"><br><br>
 
                                     <label for="media-description">Description:</label><br>
@@ -250,7 +257,49 @@
         <!-- Show User Profiles Modal -->
             <div class="modal" id="user-profile-modal" >
                 <div class="modal-content">
-                    <div id="user-profile-content"></div>  
+                    <div id="user-profile-content">
+                        
+                        <div class="top-half">
+                            <div class="user-img">
+                                <div id="user-image-container"></div>
+                                <div id="default-user-img">
+                                    <img src="../images/profile.png">
+                                </div>
+                            </div>
+                            <div id="bio-skill-container">
+                                <div id="bioDisplay"></div>
+                                <div id="skills-container">
+                                    <h5>Skills</h5>
+                                    <div id="user-skills"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="credentials-connect-container">
+                            <div class="user-credentials">
+                                <b><div id="full-name-container"></div></b>
+                                <div id="username-container"></div><br>
+                                <div id="lo-img-container">
+                                    <img src="../images/location-icon.png" style="height: 20px;">
+                                    <div id="location-container"></div>
+                                </div>
+                            </div>
+                            <div id="user-connect">
+                                <button type="button" id="connect" class="btn btn-light">Connect<img src="../images/follow-icon.png" id="follow-icon"></button>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="user-posts">
+                            <ul class="sort-user-posts">
+                                <li>All</li>
+                                <li>Events</li>
+                                <li>Media</li>
+                                <li>Polls</li>
+                            </ul>
+                            
+                            <div id="posts-container"></div>
+                        </div>
+                    </div>  
                     <span class="close" id="close-user-profile">&times;</span>
                 </div>
             </div>

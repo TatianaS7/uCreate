@@ -229,20 +229,20 @@ app.get("/auth/logout", (req, res) => {
 //POSTS//
 //Create Post
 app.post("/api/posts", async (req, res) => {
-  const { post_type, title, content, media, media_type, status, tags } =
+  const { post_type, title, content, media, media_type, tags } =
     req.body;
 
   try {
     const insertPost =
-      "INSERT INTO posts (post_type, title, content, media, media_type, status) VALUES (?, ?, ?, ?, ?, ?)";
+      "INSERT INTO posts (user_id, post_type, title, content, media, media_type) VALUES (?, ?, ?, ?, ?, ?)";
 
     const [insertedPost] = await pool.query(insertPost, [
+      user_id,
       post_type,
       title,
       content,
       media,
       media_type,
-      status,
     ]);
 
     const postId = insertedPost.insertId;
@@ -337,8 +337,8 @@ app.get("/api/posts", async (req, res) => {
   //Join users username and avatar from user table with post data
   const sql = `
   SELECT 
-  p.user_id, p.title, p.content, p.media,
-  u.username AS username, u.avatar
+    p.user_id, p.title, p.content, p.media,
+    u.username AS username, u.avatar
   FROM posts p
   INNER JOIN users u ON u.idUsers = p.user_id
   GROUP BY p.user_id, u.username, u.avatar, p.title, p.content, p.media`;  
@@ -350,24 +350,48 @@ app.get("/api/posts", async (req, res) => {
       res.json(results);
     }
   });
-
 })
+
+//Get Posts by Username
+app.get("/api/posts/:username", async (req, res) => {
+  const { username } = req.params;
+  
+  try {
+    const getPosts = `
+    SELECT 
+      p.user_id, p.title, p.content, p.media,
+      u.username AS username, u.avatar
+    FROM posts p
+    INNER JOIN users u ON u.idUsers = p.user_id
+    WHERE username = ?
+    GROUP BY p.user_id, u.username, u.avatar, p.title, p.content, p.media`;
+
+   const [posts] = await pool.query(getPosts, [username]);
+
+  res.status(200).json({ posts });
+  } catch (error) {
+      console.error("Error fetching posts:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 
 //EVENTS//
 //Create Event
 app.post("/api/events", async (req, res) => {
-  const { event_name, event_date, location_text, event_description, tags } =
+  const { event_name, event_date, address, city, state, event_description, tags } =
     req.body;
 
   try {
     const insertEvent =
-      "INSERT INTO events (event_name, event_date, location_text, event_description) VALUES (?, ?, ?, ?)";
+      "INSERT INTO events (event_name, event_date, address, city, state, event_description) VALUES (?, ?, ?, ?, ?, ?)";
 
     const [insertedEvent] = await pool.query(insertEvent, [
       event_name,
       event_date,
-      location_text,
+      address, 
+      city,
+      state,
       event_description,
     ]);
 
@@ -395,17 +419,19 @@ app.post("/api/events", async (req, res) => {
 // Update Event
 app.put("/api/events/:eventId", async (req, res) => {
   const eventId = req.params.eventId;
-  const { event_name, event_date, location_text, event_description, tags } =
+  const { event_name, event_date, address, city, state, event_description, tags } =
     req.body;
 
   try {
     const updateEvent =
-      "UPDATE events SET event_name = ?, event_date = ?, location_text = ?, event_description = ? WHERE event_id = ?";
+      "UPDATE events SET event_name = ?, event_date = ?, address = ?, city = ?, state = ?, event_description = ? WHERE event_id = ?";
 
     await pool.query(updateEvent, [
       event_name,
       event_date,
-      location_text,
+      address, 
+      city, 
+      state, 
       event_description,
       eventId,
     ]);
@@ -490,11 +516,11 @@ app.put("/api/events/:eventId/RSVP/:userId", async (req, res) => {
 app.get("/api/events", async (req, res) => {
   const sql = `
   SELECT 
-  e.created_by, e.event_name, e.event_date, e.location_text, e.event_description,
+  e.created_by, e.event_name, e.event_date, e.address, e.city, e.state, e.event_description,
   u.username AS username, u.avatar
   FROM events e
   INNER JOIN users u ON u.idUsers = e.created_by
-  GROUP BY e.created_by, u.username, u.avatar, e.event_name, e.event_date, e.location_text, e.event_description`;
+  GROUP BY e.created_by, u.username, u.avatar, e.event_name, e.event_date, e.address, e.city, e.state, e.event_description`;
   pool.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching events:", err);
@@ -505,6 +531,29 @@ app.get("/api/events", async (req, res) => {
   });
 
 })
+
+//Get Events by Username
+app.get("/api/events/:username", async (req, res) => {
+  const { username } = req.params;
+  
+  try {
+    const getEvents = `
+    SELECT 
+		u.username AS username, u.avatar,
+		e.event_name, e.event_date, e.address, e.city, e.state, e.event_description
+    FROM events e
+    INNER JOIN users u ON u.idUsers = e.created_by
+    WHERE username = ?
+    GROUP BY u.username, u.avatar, e.event_name, e.event_date, e.address, e.city, e.state, e.event_description`;
+
+   const [events] = await pool.query(getEvents, [username]);
+
+  res.status(200).json({ events });
+  } catch (error) {
+      console.error("Error fetching events:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 
 
@@ -747,16 +796,16 @@ app.get("/api/search", async (req, res) => {
 
   try {
     // Search for users
-    const userSql = `SELECT * FROM users WHERE username LIKE ? OR full_name LIKE ?`;
-    const [users] = await pool.query(userSql, [`%${q}%`, `%${q}%`]);
+    const userSql = `SELECT * FROM users WHERE username LIKE ? OR full_name LIKE ? OR city LIKE ? OR state LIKE ?`;
+    const [users] = await pool.query(userSql, [`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`]);
 
     // Search for posts
     const postSql = `SELECT title, content FROM posts WHERE title LIKE ? OR content LIKE ?`;
     const [posts] = await pool.query(postSql, [`%${q}%`, `%${q}%`]);
 
     // Search for events
-    const eventSql = `SELECT event_name, event_description, event_date, location_text FROM events WHERE event_name LIKE ? OR event_description LIKE ? OR location_text LIKE ?`;
-    const [events] = await pool.query(eventSql, [`%${q}%`, `%${q}%`, `%${q}%`]);
+    const eventSql = `SELECT event_name, event_description, event_date, city, state FROM events WHERE event_name LIKE ? OR event_description LIKE ? OR city LIKE ? OR state LIKE ?`;
+    const [events] = await pool.query(eventSql, [`%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`]);
 
     // Search for polls
     const pollSql = 'SELECT question FROM polls WHERE question LIKE ?';
@@ -795,16 +844,46 @@ app.get("/api/users", (req, res) => {
   });
 });
 
+//Get Specific User Profile ( by username )
+app.get("/api/user/:username", async (req, res) => {
+  const user = req.params.username;
+  console.log('Username received:', user);
+
+  try {
+  const getUserProfile = `
+  SELECT 
+    u.full_name, u.username, u.bio, u.city, u.state, u.avatar,
+    s.skill_name,
+    usk.proficiency_level
+  FROM users u
+  INNER JOIN user_skills usk ON usk.user_id = u.idUsers
+  INNER JOIN skills s ON s.id = usk.skill_id
+  WHERE u.username = ?
+  GROUP BY u.full_name, u.username, u.bio, u.city, u.state, u.avatar, s.skill_name, usk.proficiency_level
+  `;
+
+  const [userProfile] = await pool.query(getUserProfile, [user]);
+
+  res.status(200).json({ userProfile });
+
+  } catch (error) {
+      console.error("Error fetching user profile:", error);
+      res.status(500).json({ error: "Internal Server Error"});
+  }
+});
+
+
 //Get Specific User Data ( by user id )
 app.get("/api/users/:idUsers", async (req, res) => {
   const userId = req.params.idUsers;
+  console.log('User ID received:', userId);
 
   try {
   const getUserData = `
   SELECT 
     u.full_name, u.username, u.email, u.bio, u.city, u.state, u.avatar, u.idUsers, 
     s.skill_name,
-	usk.proficiency_level
+	  usk.proficiency_level
   FROM users u
   INNER JOIN user_skills usk ON usk.user_id = u.idUsers
   INNER JOIN skills s ON s.id = usk.skill_id
@@ -821,30 +900,6 @@ app.get("/api/users/:idUsers", async (req, res) => {
   }
 });
 
-//Get Specific User Profile ( by username )
-app.get("/api/users/:username", async (req, res) => {
-  const username = req.params.username;
-
-  try {
-  const getUserProfile = `
-  SELECT 
-    u.full_name, u.username, u.bio, u.city, u.state, u.avatar,
-    s.skill_name,
-    usk.proficiency_level
-  FROM users u
-  INNER JOIN user_skills usk ON usk.user_id = u.idUsers
-  INNER JOIN skills s ON s.id = usk.skill_id
-  WHERE username = ?
-  GROUP BY u.full_name, u.username, u.bio, u.city, u.state, u.avatar, s.skill_name, usk.proficiency_level`;
-  const [userProfile] = await pool.query(getUserProfile, [username]);
-
-  res.status(200).json({ userProfile });
-
-  } catch (error) {
-      console.error("Error fetching user profile:", error);
-      res.status(500).json({ error: "Internal Server Error"});
-  }
-});
 
 
 //SKILLS/TAGS ENDPOINTS

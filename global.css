@@ -56,21 +56,10 @@ text-decoration: none;
  @media screen and (max-width: 600px) {
  
  }
-
- .page-links a {
-     text-decoration: none;
-     color: white;
- }
-
- .page-links a:hover, .page-links .current{
-     text-decoration: underline;
-     text-decoration-color: black;
-     text-decoration-thickness: 2px;
- }
-
+ 
  hr {
      margin-bottom: 0;
-     color: blue;
+     color: plum;
  }
 
  .modal {
@@ -131,4 +120,12 @@ text-decoration: none;
     margin-bottom: 12px;
  }
      
+ /* USER POSTS STYLES */
+ .sort-user-posts {
+    list-style: none;
+    display: flex;
+    gap: 2em;
+    font-weight: 300;
+}
+
   

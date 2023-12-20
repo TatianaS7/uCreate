@@ -34,25 +34,15 @@ body {
  
  }
 
- .page-links a {
-     text-decoration: none;
-     color: white;
- }
-
- .page-links a:hover, .page-links .current{
-     text-decoration: underline;
-     text-decoration-color: black;
-     text-decoration-thickness: 2px;
- }
-
 #profile {
     max-height: 30px;
 }
 
- hr {
-     margin-bottom: 0;
-     color: gainsboro;
- }
+#notifications {
+    border-style: none;
+    background: none;
+}
+
  /* END OF NAVIGATION */
 
  header {
@@ -72,8 +62,6 @@ body {
     display: flex;
     flex-wrap: wrap;
     max-height: 350px;
-    overflow-y: auto;
-    overflow-x: hidden;
  }
 
  #filterPosts li{
@@ -81,7 +69,8 @@ body {
     line-height: 0.5in;
     padding-right: 40px;
     border-right-style: solid;
-    border-right-color: rgb(237, 236, 236);
+    border-right-width: 1px;
+    border-right-color: plum;
  }
 
  #filterPosts button {
@@ -97,6 +86,8 @@ body {
     max-width: 100%;
     margin-left: 20px;
     max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
  #cards {
@@ -109,6 +100,14 @@ body {
 
 .card-body {
     overflow-y: auto;
+}
+
+.card-header .left-header{
+    display: flex;
+}
+
+.save-post {
+    position: relative;
 }
 
 .poll-options {
@@ -156,19 +155,35 @@ body {
     z-index: 999;
     margin-left: 63px;
 }
+.postInput, .pollInput {
+    border-radius: 8px;
+    border-width: 1px;
+    height: 40px;
+    width: max-content;
+}
+.pollInput {
+    margin-bottom: 5px;
+}
+
+#postTypeDropdown {
+    border-radius: 8px;
+    padding: 2px;
+    width: max-content;
+}
+#openTypeButton {
+    border-radius: 20px;
+    height: 25px;
+}
 
 .new-posts {
-    margin-left: 30px;
-    justify-content: center;
-    overflow-y: auto;
+    margin: 30px;
+    overflow: auto;
 }
 
 #newPost {
     border-radius: 25px;
     width: 45px;
     height: 45px;
-    /* background-color: white;
-    color: black; */
     border-style:solid;
     padding-bottom: 7px;
     font-weight: 900;
@@ -214,7 +229,7 @@ select {
 
 .event-content, .bottom-content {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 .event-description {
@@ -229,11 +244,13 @@ select {
 
 .content-tags-divider {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
     max-height: 80%;
-    overflow-y: scroll;
+    max-width: 95%;
+    overflow-x: auto;
     margin: 20px;
-    gap: 3em;
 }
 
 .tagSearchContainer {
@@ -254,6 +271,8 @@ select {
 
 #pollOptions {
     overflow-y: scroll;
+    padding: 0 15px 15px 15px;
+    margin-top: 15px;
 }
 
 #pollModal {
@@ -268,11 +287,19 @@ select {
 
 #pollQuestion {
     text-align: center;
+    font-size: 20pt;
 }
 
 #pollOptions li{
     list-style: none;
     margin-top: 25px;
+    font-weight:400;
+}
+
+.poll-result-style {
+    border-radius: 5px;
+    padding: 8px;
+    margin: 5px 25px;
 }
 
 .save-post {
@@ -286,7 +313,93 @@ select {
 
 /* USER PROFILE MODAL */
 .user-profile {
-    background: none;
+    border-radius: 15px;
+    padding: 8px;
+    border-style: solid;
+    border-color: plum;
+    border-width: 1px;
+    background-color: white;
+}
+
+.user-thumbnail {
+    margin-right: 7px;
+    align-self: center;
+}
+
+
+.user-profile:hover {
+    border-radius: 15px;
+    padding: 8px;
+    background-color: plum;
+
+}
+
+#user-profile-content {
+    margin: 50px;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+.top-half, #credentials-connect-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-credentials {
+    margin-top: 10px;
+    width: 230px;
+}
+
+#bioDisplay {
+    margin-left: 50px;
+    /* background-color: rgba(104, 134, 197, 0.128); */
+    background-color: rgba(221, 160, 221, 0.288);
+    border-radius: 10px;
+    margin-right: 50px;
+    padding: 10px;
+    height: 120px;
+}
+
+#bio-skill-container, #user-connect {
+    flex: 1;
+}
+
+#skills-container {
+    margin-top: 20px;
+    margin-left: 50px;
+}
+
+#user-posts {
+    margin-top: 20px;
+}
+
+#posts-container {
+    height: fit-content;
+    background-color: rgb(230, 230, 230);
+    overflow-y: auto;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#follow-icon {
     border-style: none;
+    background: none;
+    max-height: 25px;
+}
+
+#user-connect {
+    margin-top: 10px;
+    margin-left: 15px;
+}
+
+#lo-img-container {
+    display: flex;
+    margin-top: 5px;
+}
+
+#default-user-img img, #user-image-container img {
+    width: 200px;
+    height: 200px;
+    border-style: solid;
 }
 
